@@ -1,7 +1,7 @@
 # fmt: off
 
 """
-Some type definitions for the tree submodule.
+Some type definitions for the capsule submodule.
 """
 
 
