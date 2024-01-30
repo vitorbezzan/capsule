@@ -4,6 +4,7 @@ Base capsule source code.
 import copy
 import logging
 import typing as tp
+from datetime import datetime
 from gzip import compress, decompress
 from os.path import expanduser
 from pickle import dumps, loads
@@ -13,7 +14,7 @@ from Crypto.Random import get_random_bytes
 
 from .datetime import get_utc_time
 from .proto import Classifier, Regressor
-from .types import Inputs, Pipeline, Predictions
+from .types import Actuals, Inputs, Pipeline, Predictions
 
 logger = logging.getLogger(__name__)
 
@@ -33,18 +34,18 @@ class Capsule(object):
             model: model object with .predict() and/or .predict_proba() methods.
             kwargs: Any other arguments to pass to capsule.
         """
-        self._name = name
-        self._model = copy.deepcopy(model)
+        self.__name = name
+        self.__model = copy.deepcopy(model)
 
-        if isinstance(self._model, Regressor):
-            self._model_type = "regression"
-        elif isinstance(self._model, Classifier):
-            self._model_type = "classifier"
+        if isinstance(self.__model, Regressor):
+            self.__model_type = "regression"
+        elif isinstance(self.__model, Classifier):
+            self.__model_type = "classifier"
         else:
-            self._model_type = "unknown"
+            self.__model_type = "unknown"
 
-        self._kwargs = kwargs
-        self._datetime = get_utc_time(
+        self.__kwargs = kwargs
+        self.__datetime = get_utc_time(
             kwargs.get("error", False),
             kwargs.get("ntp_servers", None),
         )
@@ -52,8 +53,8 @@ class Capsule(object):
     def __getstate__(self) -> dict:
         aes_key, state = self.get_bytes()
 
-        state["capsule_key_dir"] = self._kwargs.get("capsule_key_dir", expanduser("~"))
-        state["name"] = self._name
+        state["capsule_key_dir"] = self.__kwargs.get("capsule_key_dir", expanduser("~"))
+        state["name"] = self.__name
 
         with open(f"{state['capsule_key_dir']}/{state['name']}", "wb") as key_file:
             key_file.write(aes_key)
@@ -85,6 +86,10 @@ class Capsule(object):
 
         self.__dict__.update(self.read_bytes(state, aes_key))
 
+    @property
+    def datetime(self) -> datetime:
+        return self.__datetime
+
     def get_bytes(self) -> tuple[bytes, dict]:
         """
         Get bytes of Capsule, and its AES-256 encryption key.
@@ -114,9 +119,9 @@ class Capsule(object):
         )
 
     def predict(self, X: Inputs) -> Predictions | None:
-        if self._model is not None:
+        if self.__model is not None:
             try:
-                return self._model.predict(X)
+                return self.__model.predict(X)
             except AttributeError as error:
                 logger.critical(
                     ".predict() is not available. Failing.",
@@ -132,9 +137,9 @@ class Capsule(object):
         Returns probabilities for class in classifier models, and returns predictions
         for regressor models.
         """
-        if self._model is not None:
+        if self.__model is not None:
             try:
-                return self._model.predict_proba(X)  # type: ignore
+                return self.__model.predict_proba(X)  # type: ignore
             except AttributeError:
                 logger.warning(
                     ".predict_proba() is not available for this model object.",
@@ -143,3 +148,4 @@ class Capsule(object):
                 return self.predict(X)
 
         return None
+
