@@ -1,8 +1,8 @@
 # Capsule: A tidy capsule for models and pipelines, with a focus in deployment
 
 [![python](https://img.shields.io/badge/python-3.10_%7C_3.11-blue?style=for-the-badge)](http://python.org)
+[![python](https://img.shields.io/badge/python-3.12-red?style=for-the-badge)](http://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
-
 
 ### Capsule
 
