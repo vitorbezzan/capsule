@@ -1,63 +1,77 @@
 """
 Defines a storing media for all Capsules.
 """
-from dataclasses import dataclass
-from .types import Inputs, Predictions, Pipeline
+import logging
+from gzip import compress, decompress
+from pickle import dumps, loads
+
 from .proto import Classifier, Regressor
+from .types import Inputs, Pipeline, Predictions
 
 
-@dataclass
 class BaseCapsule:
     """
-    Stores information required for all Capsules.
+    Stores information and model for all Capsules.
     """
-    model: Classifier | Regressor | Pipeline
-    X_train: Inputs
-    y_train: Predictions
-    X_test:  Inputs
-    y_test: Predictions
+    def __init__(
+        self,
+        model: Classifier | Regressor | Pipeline,
+        logging_level: int = logging.INFO
+    ):
+        """
+        Constructor for BaseCapsule.
+
+        Args:
+            model: Model to encapsulate. Can be a Regressor, Classifier or a Pipeline.
+            For a pipeline, the last step should be a Regressor or Classifier.
+            logging_level: Level of logging to use for debug messages. Default is INFO.
+        """
+        self._model, self._model_type = model, _check_last_step(model)
+        self._logging_level = logging_level
 
     def __setstate__(self, state: dict):
-        raise NotImplementedError
+        self.__dict__.update(loads(decompress(state["data"])))
 
     def __getstate__(self) -> dict:
-        """
-
-        """
+        return {"data": compress(dumps(self.__dict__))}
 
     @property
     def model_type(self) -> str:
+        """
+        Returns model type.
+        """
         return self._model_type
 
-    @property
-    def n_variables(self) -> int:
-        return self._n_variables
+    def set_level(self, logging_: int) -> None:
 
-    @property
-    def n_outputs(self) -> int:
-        return self._n_outputs
-
-    def __post_init__(self):
+    def predict(self, X: Inputs) -> Predictions:
         """
-        Post-init the object.
+        Encapsulates predict method of model, adding some checks and debug logging.
         """
-        if self.X_train.shape[1] != self.X_test.shape[1]:
-            raise RuntimeError("Number of X columns mismatch between train and test.")
 
-        if self.y_train.shape[1] != self.y_test.shape[1]:
-            raise RuntimeError("Number of y columns mismatch between train and test.")
+        return self._model.predict(X)
 
-        self._n_variables = self.X_train.shape[1]
-        self._n_outputs = self.y_train.shape[1]
-        self._model_type = _check_last_step(self.model)
+    def predict_proba(self, X: Inputs) -> Predictions:
+        """
+        Encapsulates predict_proba method of model, adding some checks and logging.
+        """
+        if self.model_type == "regressor":
+            raise RuntimeError("Regressors do not have predict_proba method.")
+
+        return self._model.predict_proba(X)
 
 
 def _check_last_step(_object: Classifier | Regressor | Pipeline) -> str:
     """
     Checks type of model. If it is a pipeline, returns type of last step.
+
+    Raises:
+        ValueError: if model type is not Regressor or Classifier.
     """
     model = _object.steps[-1][1] if isinstance(_object, Pipeline) else _object
     if isinstance(model, Regressor):
         return "regressor"
+    elif isinstance(model, Classifier):
+        return "classifier"
 
-    return "classifier"
+    raise ValueError("Unsupported model type.")
