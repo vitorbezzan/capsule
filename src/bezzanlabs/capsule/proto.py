@@ -3,7 +3,7 @@ Prototypes for model classes and supporting functions.
 """
 import typing as tp
 
-from .types import Inputs, Predictions
+from .types import Inputs, Pipeline, Predictions
 
 
 @tp.runtime_checkable
@@ -36,3 +36,6 @@ class Classifier(tp.Protocol):
         Defines predict method for a Classifier.
         Should return a NDArray of shape (n_samples,).
         """
+
+
+model_types: tp.TypeAlias = Classifier | Regressor | Pipeline

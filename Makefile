@@ -22,7 +22,7 @@ lint:
 # mypy checks
 .PHONY: mypy
 mypy:
-	mypy src/bezzanlabs
+	mypy src/bezzanlabs --ignore-missing-imports
 
 # Convenient helper - format and lint code
 .PHONY: flint
