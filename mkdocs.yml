@@ -1,0 +1,41 @@
+site_name: Capsule
+nav:
+  - Home: index.md
+
+theme:
+  name: material
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            show_root_full_path: false
+            show_root_members_full_path: false
+            show_symbol_type_heading: true
+            members_order: alphabetical
+            docstring_section_style: table
+            show_signature: true
+            show_signature_annotations: false
+            signature_crossrefs: true
+            separate_signature: true
+            show_source: true
+            line_length: 60
+
+  - exporter:
+      formats:
+        pdf:
+          enabled: !ENV [ MKDOCS_EXPORTER_PDF, true ]
+          concurrency: 8
+      buttons:
+        - title: View as PDF
+          icon: material-file-move-outline
+          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
+          attributes:
+            target: _blank
+            href: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.href
+        - title: Download as PDF
+          icon: material-file-download-outline
+          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
+          attributes: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.attributes

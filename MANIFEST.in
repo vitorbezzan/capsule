@@ -1,0 +1,6 @@
+recursive-include capsule *.py
+global-include *.so
+global-include *.ini
+global-include Dockerfile
+global-include *.json
+global-include *.conf
