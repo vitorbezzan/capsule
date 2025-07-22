@@ -56,7 +56,7 @@ class BaseCapsule(BaseEstimator):
 
     def predict(self, X: Input) -> Output:
         """Predict the capsule's output."""
-        return self.predict(X)
+        return self.model.predict(X)
 
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):
@@ -78,4 +78,4 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     def predict_proba(self, X: Input) -> Output:
         """Predict the probabilities for the given input."""
-        return self.predict_proba(X)
+        return self.model.predict_proba(X)
