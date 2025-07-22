@@ -12,6 +12,7 @@ description = "Gives models superpowers in production."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+
 ]
 
 [tool.setuptools.dynamic]
@@ -58,7 +59,7 @@ line-ending = "auto"
 [tool.ruff.lint]
 fixable = ["ALL"]
 select = ["E", "F", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "S", "BLE", "B", "A", "C4", "DTZ", "EM", "EXE", "FA", "ISC", "ICN", "INP", "PIE", "PT", "Q", "RET", "SIM", "T20", "TID", "TCH", "ARG", "PTH", "ERA", "PD", "PGH", "PL", "TRY", "RUF"]
-ignore = []
+ignore = ["N803", "EM101", "TRY003", "D203", "D211", "D213"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D"]
