@@ -49,20 +49,54 @@ pythonpath = [
 ]
 
 [tool.ruff]
+target-version = "py312"
 line-length = 88
-exclude = [".git", "__pycache__", "build", "dist", ".venv"]
-target-version = "py311"
+show-fixes = true
+extend-include = ["*.ipynb"]
 
 [tool.ruff.format]
+docstring-code-format = true
 quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
 
 [tool.ruff.lint]
-fixable = ["ALL"]
-select = ["E", "F", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "S", "BLE", "B", "A", "C4", "DTZ", "EM", "EXE", "FA", "ISC", "ICN", "INP", "PIE", "PT", "Q", "RET", "SIM", "T20", "TID", "TCH", "ARG", "PTH", "ERA", "PD", "PGH", "PL", "TRY", "RUF"]
-ignore = ["N803", "EM101", "EM102", "TRY003", "D203", "D211", "D213", "F401", "N806"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["D"]
+pydocstyle.convention = "google"
+# NOTE: Synchoronize the ignores with .flake8
+ignore = [
+    "B007", "B008", "B017", "B018", "B023", "B028",  # Various B-prefixed rules
+    "E402", "E501", "E721", "E741",  # E-prefixed rules
+    "C408",  # Dict keyword argument syntax
+    "D415", "D205",
+    "EXE001",
+    "F405",
+    "G101", "G004",
+    "NPY002",
+    "PERF203", "PERF401", "PERF403",
+    "PYI024", "PYI036", "PYI041", "PYI056",
+    "SIM102", "SIM103", "SIM105", "SIM108", "SIM110",
+    "SIM112", "SIM113", "SIM114", "SIM115", "SIM116", "SIM117", "SIM118",
+    "TRY002",
+    "UP006", "UP007", "UP040",  # Runtime typing rules
+    "RUF013"
+]
+select = [
+    "B", "B904",  # Basic rules
+    "C4",  # Comprehension rules
+    "D",   # Docstrings
+    "E", "EXE", "F", "G", "W",  # Common linting rules
+    "FURB", "LOG", "NPY", "PERF",  # Additional checks
+    "PGH004",
+    "PIE790", "PIE794", "PIE800", "PIE804", "PIE807", "PIE810",
+    "PLC0131", "PLC0132", "PLC0205",  # Type checking
+    "PLE",
+    "PLR0133", "PLR0206", "PLR1722", "PLR1736",  # Various Python rules
+    "PLW0129", "PLW0131", "PLW0133", "PLW0245", "PLW0406", "PLW0711",
+    "PLW1501", "PLW1509", "PLW2101", "PLW3301",
+    "PYI",
+    "Q003", "Q004",  # Quote handling
+    "RSE",
+    "RUF008", "RUF013", "RUF015", "RUF016", "RUF017", "RUF018", "RUF019",
+    "RUF024", "RUF026",
+    "SLOT", "TCH",
+    "TRY002", "TRY203", "TRY401",
+    "UP"
+]

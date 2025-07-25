@@ -1,3 +1,1 @@
-"""
-Tests for Capsules.
-"""
+"""**Tests for Capsules.**"""
