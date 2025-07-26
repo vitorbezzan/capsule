@@ -1,6 +1,7 @@
 """Base classes for the capsule package."""
 
 import typing as tp
+from abc import ABC, abstractmethod
 
 import nannyml as nml
 import numpy as np
@@ -21,6 +22,7 @@ _filter_kwargs = {
     "y_true",
     "timestamp_column_name",
     "metrics",
+    "feature_column_names",
 }
 
 
@@ -62,7 +64,7 @@ class ImplementsProba(tp.Protocol):
         """
 
 
-class BaseCapsule(BaseEstimator):
+class BaseCapsule(ABC, BaseEstimator):
     """Base class for all capsules."""
 
     def __init__(
@@ -129,7 +131,12 @@ class BaseCapsule(BaseEstimator):
         **Returns:**
         Predicted probabilities
         """
-        raise NotImplementedError
+        raise NotImplementedError("Not implemented for a generic capsule.")
+
+    @abstractmethod
+    def get_metrics(self, X: Input) -> Result:
+        """Estimate performance metrics on the analysis data."""
+        raise NotImplementedError("Must be implemented in subclasses.")
 
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):
@@ -137,15 +144,119 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
     model_: ImplementsPredict
 
-    def __init__(self, model: ImplementsPredict, X_test: Input, y_test: Output) -> None:
+    def __init__(
+        self,
+        model: ImplementsPredict,
+        X_test: Input,
+        y_test: Output,
+        target_index: int | None = None,
+        **kwargs,
+    ) -> None:
         """Initialize the regression capsule.
 
         **Arguments:**
         - `model` -- Regression model
         - `X_test` -- Test input data
         - `y_test` -- Test target data
+        - `target_index` -- Index of the target variable in multi-target regression
+        - `**kwargs` -- Additional keyword arguments for DLE estimator
+
+        **Raises:**
+        - `ValueError` -- If multi-target regression is attempted
         """
         super().__init__(model, X_test, y_test)
+        self.target_index_ = target_index
+
+        reference_data = self.get_DLE_data(X_test, y_test)
+
+        timestamp_col = (
+            "DLE_timestamp" if "DLE_timestamp" in reference_data.columns else None
+        )
+
+        self.estimator_ = nml.DLE(
+            feature_column_names=[
+                col for col in reference_data.columns if col.startswith("DLE_f_")
+            ],
+            y_pred="DLE_prediction",
+            y_true="DLE_target",
+            timestamp_column_name=timestamp_col,
+            metrics=["mae", "mape", "mse", "rmse"],
+            **{k: v for k, v in kwargs.items() if k not in _filter_kwargs},
+        )
+        self.estimator_.fit(reference_data)
+
+    def get_metrics(self, X: Input) -> Result:
+        """Estimate performance metrics on the analysis data using DLE.
+
+        **Arguments:**
+        - `X` -- Input data
+
+        **Returns:**
+        Estimated performance metrics
+        """
+        analysis_data = self.get_DLE_data(X, None)
+
+        if (self.estimator_.timestamp_column_name is not None) and (
+            "DLE_timestamp" not in analysis_data.columns
+        ):
+            raise ValueError(
+                "Timestamp column 'DLE_timestamp' is required for analysis."
+            )
+
+        estimation = self.estimator_.estimate(analysis_data)
+        return estimation.filter(period="analysis").to_df()
+
+    def get_DLE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
+        """Generate a DataFrame with the correct structure for reference/analysis data.
+        If `y` is provided, it will be included in the DataFrame.
+        If index type is in a datetime format, it will create a datetime column
+            "timestamp" automatically.
+
+        **Arguments:**
+        - `X` -- Input data
+        - `y` -- Target data (optional)
+
+        **Raises:**
+        - `ValueError` -- If input data does not have the expected number of features
+
+        **Returns:**
+        DataFrame with reference or analysis data
+        """
+        if X.shape[1] != self.n_features_:
+            raise ValueError(
+                f"Input data must have {self.n_features_} features, "
+                f"but got {X.shape[1]} features."
+            )
+
+        reference_df = (
+            pd.DataFrame(X)
+            if isinstance(X, pd.DataFrame)
+            else pd.DataFrame(
+                X, columns=[f"DLE_f_{i}" for i in range(self.n_features_)]
+            )
+        )
+
+        if isinstance(X, pd.DataFrame):
+            column_mapping = {col: f"DLE_f_{i}" for i, col in enumerate(X.columns)}
+            reference_df = reference_df.rename(columns=column_mapping)
+
+        if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):
+            reference_df["DLE_timestamp"] = X.index
+
+        if self.target_index_ is not None:
+            reference_df["DLE_prediction"] = self.model_.predict(X)[
+                :, self.target_index_
+            ]
+        else:
+            reference_df["DLE_prediction"] = self.model_.predict(X)
+
+        if y is not None:
+            if self.target_index_ is not None:
+                reference_df["DLE_target"] = y[:, self.target_index_]
+            else:
+                reference_df["DLE_target"] = y
+
+        return reference_df
 
 
 class ClassificationCapsule(BaseCapsule, ClassifierMixin):
