@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from nannyml.base import Result
 from numpy.typing import NDArray
+from pydantic import NonNegativeInt, validate_call
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.utils.validation import check_X_y
 
@@ -26,6 +27,7 @@ _filter_kwargs = {
 }
 
 
+@tp.runtime_checkable
 class ImplementsPredict(tp.Protocol):
     """Protocol for classes that implement a predict method."""
 
@@ -40,6 +42,7 @@ class ImplementsPredict(tp.Protocol):
         """
 
 
+@tp.runtime_checkable
 class ImplementsProba(tp.Protocol):
     """Protocol for classes that implements predict and predict_proba methods."""
 
@@ -67,6 +70,7 @@ class ImplementsProba(tp.Protocol):
 class BaseCapsule(ABC, BaseEstimator):
     """Base class for all capsules."""
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
         self,
         model: ImplementsPredict | ImplementsProba,
@@ -82,8 +86,6 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         super().__init__()
 
-        self.model_ = model
-
         check_X_y(
             X_test,
             y_test,
@@ -93,6 +95,10 @@ class BaseCapsule(ABC, BaseEstimator):
             y_numeric=True,
         )
 
+        self.X_test_ = X_test
+        self.y_test_ = y_test
+
+        self.model_ = model
         self.n_features_ = X_test.shape[1]
         self.n_targets_ = 1 if y_test.ndim == 1 else y_test.shape[1]
 
@@ -111,6 +117,7 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         raise NotImplementedError("Capsules cannot be fit.")
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def predict(self, X: Input) -> Output:
         """Predict the capsule's output.
 
@@ -144,12 +151,13 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
     model_: ImplementsPredict
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
         self,
         model: ImplementsPredict,
         X_test: Input,
         y_test: Output,
-        target_index: int | None = None,
+        target_index: NonNegativeInt | None = None,
         **kwargs,
     ) -> None:
         """Initialize the regression capsule.
@@ -167,7 +175,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         super().__init__(model, X_test, y_test)
         self.target_index_ = target_index
 
-        reference_data = self.get_DLE_data(X_test, y_test)
+        reference_data = self.get_DLE_data(self.X_test_, self.y_test_)
 
         timestamp_col = (
             "DLE_timestamp" if "DLE_timestamp" in reference_data.columns else None
@@ -206,6 +214,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         estimation = self.estimator_.estimate(analysis_data)
         return estimation.filter(period="analysis").to_df()
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def get_DLE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
         """Generate a DataFrame with the correct structure for reference/analysis data.
         If `y` is provided, it will be included in the DataFrame.
@@ -264,6 +273,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     model_: ImplementsProba
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
         self, model: ImplementsProba, X_test: Input, y_test: Output, **kwargs
     ) -> None:
@@ -286,7 +296,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             )
 
         self.n_classes_ = len(np.unique(y_test))
-        reference_data = self.get_CBPE_data(X_test, y_test)
+        reference_data = self.get_CBPE_data(self.X_test_, self.y_test_)
 
         is_multiclass = self.n_classes_ > 2
         problem_type = (
@@ -312,6 +322,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         )
         self.estimator_.fit(reference_data)
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def predict_proba(self, X: Input) -> Output:
         """Predict the probabilities for the given input.
 
@@ -344,6 +355,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         estimation = self.estimator_.estimate(analysis_data)
         return estimation.filter(period="analysis").to_df()
 
+    @validate_call(config={"arbitrary_types_allowed": True})
     def get_CBPE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
         """Generate a DataFrame with the correct structure for reference/analysis data.
         If `y` is provided, it will be included in the DataFrame.
