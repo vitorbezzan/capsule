@@ -111,13 +111,13 @@ class BaseCapsule(ABC, BaseEstimator):
             nonce = os.urandom(12)
             encrypted = AESGCM(os.environ["CAPSULE_KEY"].encode()).encrypt(
                 nonce,
-                pickle.dumps(self.__dict__, protocol=pickle.HIGHEST_PROTOCOL),
+                pickle.dumps(self.__dict__),
                 None,
             )
 
             return {"nonce": nonce, "data": encrypted}
 
-        return {"data": pickle.dumps(self.__dict__, protocol=pickle.HIGHEST_PROTOCOL)}
+        return {"data": pickle.dumps(self.__dict__)}
 
     def __setstate__(self, state: dict) -> None:
         """Sets the state of the capsule from serialized data."""
