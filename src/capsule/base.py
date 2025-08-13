@@ -32,46 +32,66 @@ _filter_kwargs = {
 
 @tp.runtime_checkable
 class ImplementsPredict(tp.Protocol):
-    """Protocol for classes that implement a predict method."""
+    """Protocol for classes that implement a predict method.
+
+    This protocol defines the interface for models that can make predictions.
+    Classes implementing this protocol must define a predict method that takes
+    input data and returns predictions.
+    """
 
     def predict(self, X: Input) -> Output:
-        """Predict the output for the given input.
+        """Predict output for the given input.
 
-        **Arguments:**
-        - `X` -- Input data
+        Args:
+            X: Input data for prediction.
 
-        **Returns:**
-        Predicted output
+        Returns:
+            Predicted output values.
         """
 
 
 @tp.runtime_checkable
 class ImplementsProba(tp.Protocol):
-    """Protocol for classes that implements predict and predict_proba methods."""
+    """Protocol for classes that implement predict and predict_proba methods.
+
+    This protocol extends ImplementsPredict to include probability prediction
+    capabilities. Classes implementing this protocol must define both predict
+    and predict_proba methods for classification tasks.
+    """
 
     def predict(self, X: Input) -> Output:
-        """Predict the output for the given input.
+        """Predict output for the given input.
 
-        **Arguments:**
-        - `X` -- Input data
+        Args:
+            X: Input data for prediction.
 
-        **Returns:**
-        Predicted output
+        Returns:
+            Predicted class labels.
         """
 
     def predict_proba(self, X: Input) -> Output:
-        """Predict the probabilities for the given input.
+        """Predict class probabilities for the given input.
 
-        **Arguments:**
-        - `X` -- Input data
+        Args:
+            X: Input data for probability prediction.
 
-        **Returns:**
-        Predicted probabilities
+        Returns:
+            Predicted class probabilities.
         """
 
 
 class BaseCapsule(ABC, BaseEstimator):
-    """Base class for all capsules."""
+    """Base abstract class for all capsule implementations.
+
+    This class provides the common interface and functionality for both
+    regression and classification capsules. It handles model wrapping,
+    serialization with optional encryption, and defines the basic contract
+    that all capsules must follow.
+
+    Note:
+        Capsules are immutable wrappers around trained models and cannot
+        be fitted after creation.
+    """
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
@@ -80,12 +100,15 @@ class BaseCapsule(ABC, BaseEstimator):
         X_test: Input,
         y_test: Output,
     ) -> None:
-        """Initialize the base capsule with a model and test data.
+        """Initialize the base capsule with a trained model and test data.
 
-        **Arguments:**
-        - `model` -- Model implementing prediction
-        - `X_test` -- Test input data
-        - `y_test` -- Test target data
+        Args:
+            model: A trained model that implements prediction methods.
+            X_test: Test input data used for reference during performance estimation.
+            y_test: Test target data corresponding to X_test.
+
+        Raises:
+            ValidationError: If the input data fails validation checks.
         """
         super().__init__()
 
@@ -106,7 +129,14 @@ class BaseCapsule(ABC, BaseEstimator):
         self.n_targets_ = 1 if y_test.ndim == 1 else y_test.shape[1]
 
     def __getstate__(self) -> dict:
-        """Gets the state of the capsule for serialization."""
+        """Prepare capsule state for serialization with optional encryption.
+
+        If the CAPSULE_KEY environment variable is set, the capsule state
+        will be encrypted using AES-GCM encryption before serialization.
+
+        Returns:
+            Dictionary containing serialized (and possibly encrypted) state.
+        """
         if os.getenv("CAPSULE_KEY", None) is not None:
             nonce = os.urandom(12)
             encrypted = AESGCM(os.environ["CAPSULE_KEY"].encode()).encrypt(
@@ -120,7 +150,17 @@ class BaseCapsule(ABC, BaseEstimator):
         return {"data": pickle.dumps(self.__dict__)}
 
     def __setstate__(self, state: dict) -> None:
-        """Sets the state of the capsule from serialized data."""
+        """Restore capsule state from serialized data with optional decryption.
+
+        If the state contains encrypted data (indicated by presence of 'nonce'),
+        it will be decrypted using the CAPSULE_KEY environment variable.
+
+        Args:
+            state: Dictionary containing serialized state data.
+
+        Raises:
+            RuntimeError: If encrypted data is found but CAPSULE_KEY is not set.
+        """
         data = state["data"]
 
         if "nonce" in state:
@@ -137,49 +177,83 @@ class BaseCapsule(ABC, BaseEstimator):
     def fit(
         self, X: Input, y: Output | None = None, **fit_params: dict
     ) -> "BaseCapsule":
-        """Capsules cannot be fit.
+        """Attempt to fit the capsule.
 
-        **Arguments:**
-        - `X` -- Input data
-        - `y` -- Target data
-        - `**fit_params` -- Additional fit parameters
+        Capsules wrap pre-trained models and cannot be fitted. This method
+        always raises NotImplementedError to maintain the immutable nature
+        of capsules.
 
-        **Raises:**
-        - `NotImplementedError` -- Always raised since capsules cannot be fit
+        Args:
+            X: Input data (ignored).
+            y: Target data (ignored).
+            **fit_params: Additional parameters (ignored).
+
+        Returns:
+            Never returns - always raises exception.
+
+        Raises:
+            NotImplementedError: Always raised since capsules cannot be fitted.
         """
         raise NotImplementedError("Capsules cannot be fit.")
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def predict(self, X: Input) -> Output:
-        """Predict the capsule's output.
+        """Generate predictions using the wrapped model.
 
-        **Arguments:**
-        - `X` -- Input data
+        Args:
+            X: Input data for prediction.
 
-        **Returns:**
-        Predicted output
+        Returns:
+            Model predictions for the input data.
         """
         return self.model_.predict(X)
 
     def predict_proba(self, X: Input) -> Output:
-        """Predict the probabilities for the given input.
+        """Generate probability predictions.
 
-        **Arguments:**
-        - `X` -- Input data
+        This base implementation raises NotImplementedError. Subclasses
+        should override this method if they support probability predictions.
 
-        **Returns:**
-        Predicted probabilities
+        Args:
+            X: Input data for probability prediction.
+
+        Returns:
+            Predicted probabilities (not implemented in base class).
+
+        Raises:
+            NotImplementedError: Always raised in base implementation.
         """
         raise NotImplementedError("Not implemented for a generic capsule.")
 
     @abstractmethod
     def get_metrics(self, X: Input) -> Result:
-        """Estimate performance metrics on the analysis data."""
+        """Estimate performance metrics on analysis data.
+
+        This abstract method must be implemented by subclasses to provide
+        performance estimation capabilities specific to their task type.
+
+        Args:
+            X: Analysis data for performance estimation.
+
+        Returns:
+            Performance estimation results.
+
+        Raises:
+            NotImplementedError: If not implemented by subclass.
+        """
         raise NotImplementedError("Must be implemented in subclasses.")
 
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):
-    """Capsule for regression tasks."""
+    """Capsule implementation for regression tasks.
+
+    This class wraps regression models and provides performance estimation
+    using Direct Loss Estimation (DLE) from the nannyml library. It supports
+    both single and multi-target regression scenarios.
+
+    Attributes:
+        model_: The wrapped regression model implementing ImplementsPredict.
+    """
 
     model_: ImplementsPredict
 
@@ -192,17 +266,24 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         target_index: NonNegativeInt | None = None,
         **kwargs,
     ) -> None:
-        """Initialize the regression capsule.
+        """Initialize the regression capsule with DLE estimator.
 
-        **Arguments:**
-        - `model` -- Regression model
-        - `X_test` -- Test input data
-        - `y_test` -- Test target data
-        - `target_index` -- Index of the target variable in multi-target regression
-        - `**kwargs` -- Additional keyword arguments for DLE estimator
+        Sets up the regression capsule with a Direct Loss Estimation (DLE)
+        estimator for performance monitoring. The DLE estimator is fitted
+        on the provided test data to serve as reference data.
 
-        **Raises:**
-        - `ValueError` -- If multi-target regression is attempted
+        Args:
+            model: A trained regression model implementing predict method.
+            X_test: Test input data for reference.
+            y_test: Test target data for reference.
+            target_index: Index of target variable for multi-target regression.
+                If None, assumes single-target regression.
+            **kwargs: Additional keyword arguments passed to DLE estimator,
+                filtered to exclude reserved parameter names.
+
+        Note:
+            Multi-target regression requires specifying target_index to
+            indicate which target variable to monitor.
         """
         super().__init__(model, X_test, y_test)
         self.target_index_ = target_index
@@ -226,13 +307,20 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         self.estimator_.fit(reference_data)
 
     def get_metrics(self, X: Input) -> Result:
-        """Estimate performance metrics on the analysis data using DLE.
+        """Estimate regression performance metrics using DLE.
 
-        **Arguments:**
-        - `X` -- Input data
+        Uses the fitted DLE estimator to estimate performance metrics
+        (MAE, MAPE, MSE, RMSE) on the provided analysis data without
+        requiring true target values.
 
-        **Returns:**
-        Estimated performance metrics
+        Args:
+            X: Analysis input data for performance estimation.
+
+        Returns:
+            DataFrame containing estimated performance metrics over time.
+
+        Raises:
+            ValueError: If timestamp column is required but missing from data.
         """
         analysis_data = self.get_DLE_data(X, None)
 
@@ -248,20 +336,26 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def get_DLE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
-        """Generate a DataFrame with the correct structure for reference/analysis data.
-        If `y` is provided, it will be included in the DataFrame.
-        If index type is in a datetime format, it will create a datetime column
-            "timestamp" automatically.
+        """Generate properly formatted DataFrame for DLE analysis.
 
-        **Arguments:**
-        - `X` -- Input data
-        - `y` -- Target data (optional)
+        Creates a DataFrame with the structure required by the DLE estimator,
+        including feature columns, predictions, and optionally target values.
+        Automatically handles datetime indexing for time-series data.
 
-        **Raises:**
-        - `ValueError` -- If input data does not have the expected number of features
+        Args:
+            X: Input data to format.
+            y: Target data to include (optional). If provided, adds target
+                column to the DataFrame.
 
-        **Returns:**
-        DataFrame with reference or analysis data
+        Returns:
+            DataFrame formatted for DLE with columns:
+                - DLE_f_0, DLE_f_1, ...: Feature columns
+                - DLE_prediction: Model predictions
+                - DLE_target: Target values (if y provided)
+                - DLE_timestamp: Timestamp column (if datetime index)
+
+        Raises:
+            ValueError: If input data doesn't have expected number of features.
         """
         if X.shape[1] != self.n_features_:
             raise ValueError(
@@ -301,7 +395,15 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
 
 class ClassificationCapsule(BaseCapsule, ClassifierMixin):
-    """Capsule for classification tasks."""
+    """Capsule implementation for classification tasks.
+
+    This class wraps classification models and provides performance estimation
+    using Confidence-based Performance Estimation (CBPE) from the nannyml
+    library. It supports both binary and multiclass classification scenarios.
+
+    Attributes:
+        model_: The wrapped classification model implementing ImplementsProba.
+    """
 
     model_: ImplementsProba
 
@@ -309,16 +411,22 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
     def __init__(
         self, model: ImplementsProba, X_test: Input, y_test: Output, **kwargs
     ) -> None:
-        """Initialize the classification capsule.
+        """Initialize the classification capsule with CBPE estimator.
 
-        **Arguments:**
-        - `model` -- Classification model implementing predict and predict_proba
-        - `X_test` -- Test input data
-        - `y_test` -- Test target data
-        - `**kwargs` -- Additional keyword arguments for CBPE estimator
+        Sets up the classification capsule with a Confidence-based Performance
+        Estimation (CBPE) estimator for performance monitoring. The CBPE
+        estimator is fitted on the provided test data to serve as reference.
 
-        **Raises:**
-        - `ValueError` -- If multi-target classification is attempted
+        Args:
+            model: A trained classification model implementing predict and
+                predict_proba methods.
+            X_test: Test input data for reference.
+            y_test: Test target data for reference.
+            **kwargs: Additional keyword arguments passed to CBPE estimator,
+                filtered to exclude reserved parameter names.
+
+        Raises:
+            ValueError: If multi-target classification is attempted (not supported).
         """
         super().__init__(model, X_test, y_test)
 
@@ -356,24 +464,31 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def predict_proba(self, X: Input) -> Output:
-        """Predict the probabilities for the given input.
+        """Generate class probability predictions using the wrapped model.
 
-        **Arguments:**
-        - `X` -- Input data
+        Args:
+            X: Input data for probability prediction.
 
-        **Returns:**
-        Predicted probabilities
+        Returns:
+            Predicted class probabilities from the wrapped model.
         """
         return self.model_.predict_proba(X)
 
     def get_metrics(self, X: Input) -> Result:
-        """Estimate performance metrics on the analysis data using CBPE.
+        """Estimate classification performance metrics using CBPE.
 
-        **Arguments:**
-        - `X` -- Input data
+        Uses the fitted CBPE estimator to estimate performance metrics
+        (F1, ROC-AUC, precision, recall) on the provided analysis data
+        without requiring true target values.
 
-        **Returns:**
-        Estimated performance metrics
+        Args:
+            X: Analysis input data for performance estimation.
+
+        Returns:
+            DataFrame containing estimated performance metrics over time.
+
+        Raises:
+            ValueError: If timestamp column is required but missing from data.
         """
         analysis_data = self.get_CBPE_data(X, None)
 
@@ -389,20 +504,28 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def get_CBPE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
-        """Generate a DataFrame with the correct structure for reference/analysis data.
-        If `y` is provided, it will be included in the DataFrame.
-        If index type is in a datetime format, it will create a datetime column
-            "timestamp" automatically.
+        """Generate properly formatted DataFrame for CBPE analysis.
 
-        **Arguments:**
-        - `X` -- Input data
-        - `y` -- Target data (optional)
+        Creates a DataFrame with the structure required by the CBPE estimator,
+        including feature columns, predictions, predicted probabilities, and
+        optionally target values. Automatically handles datetime indexing.
 
-        **Raises:**
-        - `ValueError` -- If input data does not have the expected number of features
+        Args:
+            X: Input data to format.
+            y: Target data to include (optional). If provided, adds target
+                column to the DataFrame.
 
-        **Returns:**
-        DataFrame with reference or analysis data
+        Returns:
+            DataFrame formatted for CBPE with columns:
+                - CBPE_f_0, CBPE_f_1, ...: Feature columns
+                - CBPE_prediction: Model predictions
+                - CBPE_target: Target values (if y provided)
+                - CBPE_proba: Prediction probabilities (binary classification)
+                - CBPE_class_0, CBPE_class_1, ...: Class probabilities (multiclass)
+                - CBPE_timestamp: Timestamp column (if datetime index)
+
+        Raises:
+            ValueError: If input data doesn't have expected number of features.
         """
         if X.shape[1] != self.n_features_:
             raise ValueError(
