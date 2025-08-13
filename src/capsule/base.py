@@ -11,6 +11,9 @@ from numpy.typing import NDArray
 from pydantic import NonNegativeInt, validate_call
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.utils.validation import check_X_y
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+import pickle
 
 Input: tp.TypeAlias = NDArray[np.float64] | pd.DataFrame
 Output: tp.TypeAlias = NDArray[np.float64]
@@ -101,6 +104,35 @@ class BaseCapsule(ABC, BaseEstimator):
         self.model_ = model
         self.n_features_ = X_test.shape[1]
         self.n_targets_ = 1 if y_test.ndim == 1 else y_test.shape[1]
+
+    def __getstate__(self) -> dict:
+        """Gets the state of the capsule for serialization."""
+        if os.getenv("CAPSULE_KEY", None) is not None:
+            nonce = os.urandom(12)
+            encrypted = AESGCM(os.environ["CAPSULE_KEY"].encode()).encrypt(
+                nonce,
+                pickle.dumps(self.__dict__, protocol=pickle.HIGHEST_PROTOCOL),
+                None,
+            )
+
+            return {"nonce": nonce, "data": encrypted}
+
+        return {"data": pickle.dumps(self.__dict__, protocol=pickle.HIGHEST_PROTOCOL)}
+
+    def __setstate__(self, state: dict) -> None:
+        """Sets the state of the capsule from serialized data."""
+        data = state["data"]
+
+        if "nonce" in state:
+            key = os.getenv("CAPSULE_KEY", None)
+            if key is None:
+                raise RuntimeError(
+                    "CAPSULE_KEY not set. Cannot unpickle encrypted capsule.",
+                )
+
+            data = AESGCM(key.encode()).decrypt(state["nonce"], data, None)
+
+        self.__dict__ = pickle.loads(data)
 
     def fit(
         self, X: Input, y: Output | None = None, **fit_params: dict
