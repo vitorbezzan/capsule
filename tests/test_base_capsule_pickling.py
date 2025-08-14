@@ -2,13 +2,14 @@
 
 import os
 import pickle
-import pytest
 from unittest.mock import patch
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
 
-from capsule.base import ClassificationCapsule
+import numpy as np
+import pytest
+from sklearn.datasets import make_classification
+from sklearn.ensemble import RandomForestClassifier
+
+from capsule import ClassificationCapsule
 
 
 @pytest.fixture

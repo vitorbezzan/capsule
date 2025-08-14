@@ -1,7 +1,7 @@
 """**API entrypoint for the package.**"""
 
-__version__ = "202507.0001"
+__version__ = "202507.0002"
 
 from .base import BaseCapsule as BaseCapsule
-from .base import ClassificationCapsule as ClassificationCapsule
-from .base import RegressionCapsule as RegressionCapsule
+from .classification import ClassificationCapsule as ClassificationCapsule
+from .regression import RegressionCapsule as RegressionCapsule

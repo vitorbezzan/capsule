@@ -1,12 +1,13 @@
 """Tests for Regression capsules."""
 
+import matplotlib.pyplot as plt
 import pytest
 from sklearn.datasets import load_diabetes, make_regression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 
-from src.capsule import RegressionCapsule
+from capsule import RegressionCapsule
 
 
 @pytest.fixture
@@ -50,6 +51,13 @@ def trained_multi_target_model_data():
     return model, X_test, y_test
 
 
+@pytest.fixture
+def regression_capsule(trained_single_target_model_data):
+    """Fixture to create a RegressionCapsule with trained data."""
+    model, X_test, y_test = trained_single_target_model_data
+    return RegressionCapsule(model, X_test, y_test)
+
+
 def test_single_target_diabetes(trained_single_target_model_data):
     """Test RegressionCapsule with single-target diabetes data."""
     model, X_test, y_test = trained_single_target_model_data
@@ -75,3 +83,17 @@ def test_multi_target_diabetes(trained_multi_target_model_data):
 
     assert capsule1.n_targets_ == 2
     assert not capsule1.get_metrics(X_test).empty
+
+
+def test_scatter_plot(regression_capsule):
+    """Test the scatter method of RegressionCapsule."""
+    capsule = regression_capsule
+    ax = capsule.plots.scatter()
+
+    assert ax.get_xlabel() == "True Values"
+    assert ax.get_ylabel() == "Predicted Values"
+
+    lines = ax.get_lines()
+    assert any(line.get_label() == "Reference Line" for line in lines)
+
+    plt.close(ax.figure)
