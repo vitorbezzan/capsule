@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from nannyml._typing import Result
 from pydantic import NonNegativeInt, validate_call
 from sklearn.base import RegressorMixin
+from scipy.interpolate import UnivariateSpline
 
 from capsule import BaseCapsule
 from capsule.base import ImplementsPredict, Input, Output, filter_kwargs
@@ -58,6 +59,93 @@ class RegressionPlots:
         ax.plot([m, M], [m, M], "k--", lw=1, label="Reference Line")
         ax.set_xlabel("True Values")
         ax.set_ylabel("Predicted Values")
+        ax.legend()
+
+        return ax
+
+    def residuals_plot(
+        self,
+        X: Input | None = None,
+        y: Output | None = None,
+        n_bins: int | None = None,
+        **scatter_args,
+    ) -> plt.Axes:
+        """Plot a residual plot of residuals vs. predicted values.
+
+        Generates a residual plot showing the residuals (true - predicted values)
+        against the predicted values for regression analysis. This plot is useful
+        for diagnosing model performance and identifying patterns in prediction errors.
+        If no input data is provided, uses the test data stored in the capsule.
+        Optionally accepts additional keyword arguments for customizing the scatter plot.
+
+        Args:
+            X: Input data for prediction (optional). If None, uses the test input data.
+            y: True target values (optional). If None, uses the test target data.
+            n_bins: Number of bins to use for smoothing the residual trend line.
+                If None, defaults to min(50, len(data) // 10).
+            **scatter_args: Additional keyword arguments passed to matplotlib's scatter.
+
+        Returns:
+            The matplotlib Axes object containing the residual plot.
+        """
+        y_true = np.array(self.capsule.y_test_ if y is None else y)
+        y_pred = np.array(
+            self.capsule.model_.predict(self.capsule.X_test_ if X is None else X)
+        )
+
+        if self.capsule.n_targets_ > 1:
+            y_true = y_true[:, self.capsule.target_index_]
+            y_pred = y_pred[:, self.capsule.target_index_]
+
+        residuals = y_true - y_pred
+
+        _, ax = plt.subplots()
+
+        ax.scatter(y_pred, residuals, **scatter_args)
+        ax.axhline(y=0, color="k", linestyle="--", linewidth=1, label="Reference Line")
+
+        try:
+            df = pd.DataFrame({"predictions": y_pred, "residuals": residuals})
+            df["pred_bins"] = pd.cut(
+                df["predictions"],
+                bins=n_bins or min(50, len(df) // 10),
+                duplicates="drop",
+            )
+
+            grouped = (
+                df.groupby("pred_bins", observed=True)
+                .agg(
+                    {
+                        "predictions": "mean",
+                        "residuals": "mean",
+                    }
+                )
+                .dropna()
+            )
+
+            if len(grouped) >= 4:
+                grouped = grouped.sort_values("predictions")
+                spline = UnivariateSpline(
+                    grouped["predictions"],
+                    grouped["residuals"],
+                    s=len(grouped) * 0.1,
+                )
+
+                # Generate smooth curve for plotting
+                x_smooth = np.linspace(
+                    grouped["predictions"].min(),
+                    grouped["predictions"].max(),
+                    100,
+                )
+                y_smooth = spline(x_smooth)
+
+                ax.plot(x_smooth, y_smooth, "r-", linewidth=1, label="Residual Trend")
+
+        except (ValueError, np.linalg.LinAlgError):
+            pass
+
+        ax.set_xlabel("Predicted Values")
+        ax.set_ylabel("Residuals (True - Predicted)")
         ax.legend()
 
         return ax

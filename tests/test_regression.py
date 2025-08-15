@@ -86,7 +86,7 @@ def test_multi_target_diabetes(trained_multi_target_model_data):
 
 
 def test_scatter_plot(regression_capsule):
-    """Test the scatter method of RegressionCapsule."""
+    """Test the scatter method of RegressionPlots."""
     capsule = regression_capsule
     ax = capsule.plots.scatter()
 
@@ -96,4 +96,16 @@ def test_scatter_plot(regression_capsule):
     lines = ax.get_lines()
     assert any(line.get_label() == "Reference Line" for line in lines)
 
+    plt.close(ax.figure)
+
+
+def test_residuals_plot(regression_capsule):
+    """Test the residuals method of RegressionPlots."""
+    capsule = regression_capsule
+    ax = capsule.plots.residuals_plot()
+
+    assert ax.get_xlabel() == "Predicted Values"
+    assert ax.get_ylabel() == "Residuals (True - Predicted)"
+
+    plt.savefig("test.png")
     plt.close(ax.figure)
