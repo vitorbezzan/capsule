@@ -207,23 +207,6 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         return self.model_.predict(X)
 
-    def predict_proba(self, X: Input) -> Output:
-        """Generate probability predictions.
-
-        This base implementation raises NotImplementedError. Subclasses
-        should override this method if they support probability predictions.
-
-        Args:
-            X: Input data for probability prediction.
-
-        Returns:
-            Predicted probabilities (not implemented in base class).
-
-        Raises:
-            NotImplementedError: Always raised in base implementation.
-        """
-        raise NotImplementedError("Not implemented for a generic capsule.")
-
     @abstractmethod
     def get_metrics(self, X: Input) -> Result:
         """Estimate performance metrics on analysis data.
