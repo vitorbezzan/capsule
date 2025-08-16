@@ -107,5 +107,4 @@ def test_residuals_plot(regression_capsule):
     assert ax.get_xlabel() == "Predicted Values"
     assert ax.get_ylabel() == "Residuals (True - Predicted)"
 
-    plt.savefig("test.png")
     plt.close(ax.figure)

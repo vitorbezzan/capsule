@@ -1,13 +1,15 @@
 """Capsules for regression tasks."""
 
+import typing as tp
+
 import nannyml as nml
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from nannyml._typing import Result
 from pydantic import NonNegativeInt, validate_call
-from sklearn.base import RegressorMixin
 from scipy.interpolate import UnivariateSpline
+from sklearn.base import RegressorMixin
 
 from capsule import BaseCapsule
 from capsule.base import ImplementsPredict, Input, Output, filter_kwargs
@@ -22,8 +24,8 @@ class RegressionPlots:
 
     def scatter(
         self,
-        X: Input | None = None,
-        y: Output | None = None,
+        X: tp.Optional[Input] = None,
+        y: tp.Optional[Output] = None,
         **scatter_args,
     ) -> plt.Axes:
         """Plot a scatter plot of true vs. predicted values.
@@ -65,8 +67,8 @@ class RegressionPlots:
 
     def residuals_plot(
         self,
-        X: Input | None = None,
-        y: Output | None = None,
+        X: tp.Optional[Input] = None,
+        y: tp.Optional[Output] = None,
         n_bins: int | None = None,
         **scatter_args,
     ) -> plt.Axes:
@@ -170,7 +172,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         model: ImplementsPredict,
         X_test: Input,
         y_test: Output,
-        target_index: NonNegativeInt | None = None,
+        target_index: tp.Optional[NonNegativeInt] = None,
         **kwargs,
     ) -> None:
         """Initialize the regression capsule with DLE estimator.
@@ -248,7 +250,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         return estimation.filter(period="analysis").to_df()
 
     @validate_call(config={"arbitrary_types_allowed": True})
-    def get_DLE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
+    def get_DLE_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
         """Generate properly formatted DataFrame for DLE analysis.
 
         Creates a DataFrame with the structure required by the DLE estimator,

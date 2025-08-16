@@ -1,5 +1,7 @@
 """Capsules for classification tasks."""
 
+import typing as tp
+
 import nannyml as nml
 import numpy as np
 import pandas as pd
@@ -128,7 +130,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         return estimation.filter(period="analysis").to_df()
 
     @validate_call(config={"arbitrary_types_allowed": True})
-    def get_CBPE_data(self, X: Input, y: Output | None = None) -> pd.DataFrame:
+    def get_CBPE_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
         """Generate properly formatted DataFrame for CBPE analysis.
 
         Creates a DataFrame with the structure required by the CBPE estimator,

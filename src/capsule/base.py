@@ -14,8 +14,8 @@ from pydantic import validate_call
 from sklearn.base import BaseEstimator
 from sklearn.utils.validation import check_X_y
 
-Input: tp.TypeAlias = NDArray[np.float64] | pd.DataFrame
-Output: tp.TypeAlias = NDArray[np.float64]
+type Input = NDArray[np.float64] | pd.DataFrame
+type Output = NDArray[np.float64]
 
 
 filter_kwargs = {
@@ -174,7 +174,7 @@ class BaseCapsule(ABC, BaseEstimator):
         self.__dict__ = pickle.loads(data)
 
     def fit(
-        self, X: Input, y: Output | None = None, **fit_params: dict
+        self, X: Input, y: tp.Optional[Output] = None, **fit_params: dict
     ) -> "BaseCapsule":
         """Attempt to fit the capsule.
 
