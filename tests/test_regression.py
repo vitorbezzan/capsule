@@ -108,3 +108,17 @@ def test_residuals_plot(regression_capsule):
     assert ax.get_ylabel() == "Residuals (True - Predicted)"
 
     plt.close(ax.figure)
+
+
+def test_std_residuals_hist(regression_capsule):
+    """Test the standardized residuals histogram of RegressionPlots."""
+    capsule = regression_capsule
+    ax = capsule.plots.residuals_hist()
+
+    assert ax.get_xlabel() == "Residuals"
+    assert ax.get_ylabel() == "Frequency"
+
+    assert len(ax.patches) > 0
+
+    plt.savefig("test_std_residuals_hist.png")
+    plt.close(ax.figure)

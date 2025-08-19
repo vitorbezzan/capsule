@@ -152,6 +152,88 @@ class RegressionPlots:
 
         return ax
 
+    def residuals_hist(
+        self,
+        X: tp.Optional[Input] = None,
+        y: tp.Optional[Output] = None,
+        bins: int | str | None = None,
+        standard: bool = False,
+        **hist_args,
+    ) -> plt.Axes:
+        """Plot a histogram of standardized residuals.
+
+        Computes standardized residuals from true and predicted values and displays
+        a histogram. If no data is provided, uses the capsule's stored test set.
+
+        Args:
+            X: Input data for prediction (optional). If None, uses the test input data.
+            y: True target values (optional). If None, uses the test target data.
+            bins: Number of bins or binning strategy for matplotlib's hist. If None,
+                defaults to 30.
+            standard: If True, uses the standard standardized residuals.
+            **hist_args: Additional keyword arguments passed to matplotlib's hist.
+
+        Returns:
+            The matplotlib Axes object containing the histogram.
+        """
+        y_true = np.array(self.capsule.y_test_ if y is None else y)
+        y_pred = np.array(
+            self.capsule.model_.predict(self.capsule.X_test_ if X is None else X)
+        )
+
+        if self.capsule.n_targets_ > 1:
+            y_true = y_true[:, self.capsule.target_index_]
+            y_pred = y_pred[:, self.capsule.target_index_]
+
+        residuals = y_true - y_pred
+        residuals = residuals.astype(float)
+        residuals = residuals[~np.isnan(residuals)]
+
+        std = np.std(residuals, ddof=1) if residuals.size > 1 else 0.0
+        mean = float(np.mean(residuals)) if residuals.size > 0 else 0.0
+
+        if standard:
+            if std > 0:
+                residuals = (residuals - mean) / std
+
+                mean = 0.0
+                std = 1.0
+            else:
+                residuals = np.zeros_like(residuals)
+
+        _, ax = plt.subplots()
+        ax.hist(residuals, bins=(bins or 30), **hist_args)
+
+        ax.axvline(
+            x=mean, color="k", linestyle="--", linewidth=1, label=f"Mean = {mean:.2f}"
+        )
+        ax.axvline(
+            x=0, color="k", linestyle="dotted", linewidth=1, label="Expected Mean"
+        )
+        ax.axvline(
+            x=float(2 * std),
+            color="r",
+            linestyle=":",
+            linewidth=1,
+            label=f"±2 std = {std:.2f}",
+        )
+        ax.axvline(x=-float(2 * std), color="r", linestyle=":", linewidth=1)
+        ax.axvline(
+            x=float(3 * std),
+            color="r",
+            linestyle="-.",
+            linewidth=1,
+            label=f"±3 std = {std:.2f}",
+        )
+        ax.axvline(x=-float(3 * std), color="r", linestyle="-.", linewidth=1)
+
+        ax.set_xlabel("Residuals")
+        ax.set_ylabel("Frequency")
+        ax.set_title("Residuals Histogram")
+        ax.legend()
+
+        return ax
+
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):
     """Capsule implementation for regression tasks.
