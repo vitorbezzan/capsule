@@ -120,5 +120,4 @@ def test_std_residuals_hist(regression_capsule):
 
     assert len(ax.patches) > 0
 
-    plt.savefig("test_std_residuals_hist.png")
     plt.close(ax.figure)
