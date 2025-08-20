@@ -215,7 +215,7 @@ class RegressionPlots:
             color="r",
             linestyle=":",
             linewidth=1,
-            label=f"±2 std = {std:.2f}",
+            label=f"+-2 std = {std:.2f}",
         )
         ax.axvline(x=-float(2 * std), color="r", linestyle=":", linewidth=1)
         ax.axvline(
@@ -223,7 +223,7 @@ class RegressionPlots:
             color="r",
             linestyle="-.",
             linewidth=1,
-            label=f"±3 std = {std:.2f}",
+            label=f"+-3 std = {std:.2f}",
         )
         ax.axvline(x=-float(3 * std), color="r", linestyle="-.", linewidth=1)
 
