@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 import pandas as pd
+import nannyml as nml
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from nannyml.base import Result
 from numpy.typing import NDArray
@@ -98,6 +99,7 @@ class BaseCapsule(ABC, BaseEstimator):
         model: ImplementsPredict | ImplementsProba,
         X_test: Input,
         y_test: Output,
+        **kwargs,
     ) -> None:
         """Initialize the base capsule with a trained model and test data.
 
@@ -105,6 +107,8 @@ class BaseCapsule(ABC, BaseEstimator):
             model: A trained model that implements prediction methods.
             X_test: Test input data used for reference during performance estimation.
             y_test: Test target data corresponding to X_test.
+            kwargs: Additional keyword arguments to pass to the univariate drift
+                detector.
 
         Raises:
             ValidationError: If the input data fails validation checks.
@@ -229,4 +233,9 @@ class BaseCapsule(ABC, BaseEstimator):
     @abstractmethod
     def plots(self) -> object:
         """Get plots for the capsule."""
+        raise NotImplementedError("Must be implemented in subclasses.")
+
+    @abstractmethod
+    def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
+        """Formats data to be used in metrics calculations and plots."""
         raise NotImplementedError("Must be implemented in subclasses.")

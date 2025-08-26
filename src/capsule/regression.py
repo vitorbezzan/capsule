@@ -270,13 +270,18 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             target_index: Index of target variable for multi-target regression.
                 If None, assumes single-target regression.
             **kwargs: Additional keyword arguments passed to DLE estimator,
-                filtered to exclude reserved parameter names.
+                to be filtered to exclude reserved parameter names.
 
         Note:
             Multi-target regression requires specifying target_index to
             indicate which target variable to monitor.
         """
-        super().__init__(model, X_test, y_test)
+        super().__init__(
+            model,
+            X_test,
+            y_test,
+            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+        )
 
         self.target_index_ = target_index
         if self.n_targets_ > 1 and self.target_index_ is None:
@@ -285,7 +290,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
                 "to indicate which target variable to monitor."
             )
 
-        reference_data = self.get_DLE_data(self.X_test_, self.y_test_)
+        reference_data = self.format_data(self.X_test_, self.y_test_)
 
         timestamp_col = (
             "DLE_timestamp" if "DLE_timestamp" in reference_data.columns else None
@@ -319,7 +324,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         Raises:
             ValueError: If timestamp column is required but missing from data.
         """
-        analysis_data = self.get_DLE_data(X, None)
+        analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (
             "DLE_timestamp" not in analysis_data.columns
@@ -332,7 +337,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         return estimation.filter(period="analysis").to_df()
 
     @validate_call(config={"arbitrary_types_allowed": True})
-    def get_DLE_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
+    def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
         """Generate properly formatted DataFrame for DLE analysis.
 
         Creates a DataFrame with the structure required by the DLE estimator,

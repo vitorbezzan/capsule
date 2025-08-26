@@ -184,12 +184,17 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             X_test: Test input data for reference.
             y_test: Test target data for reference.
             **kwargs: Additional keyword arguments passed to CBPE estimator,
-                filtered to exclude reserved parameter names.
+                to be filtered to exclude reserved parameter names.
 
         Raises:
             ValueError: If multi-target classification is attempted (not supported).
         """
-        super().__init__(model, X_test, y_test)
+        super().__init__(
+            model,
+            X_test,
+            y_test,
+            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+        )
 
         if self.n_targets_ != 1:
             raise ValueError(
@@ -197,7 +202,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             )
 
         self.n_classes_ = len(np.unique(y_test))
-        reference_data = self.get_CBPE_data(self.X_test_, self.y_test_)
+        reference_data = self.format_data(self.X_test_, self.y_test_)
 
         is_multiclass = self.n_classes_ > 2
         problem_type = (
@@ -251,7 +256,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         Raises:
             ValueError: If timestamp column is required but missing from data.
         """
-        analysis_data = self.get_CBPE_data(X, None)
+        analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (
             "CBPE_timestamp" not in analysis_data.columns
@@ -264,7 +269,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         return estimation.filter(period="analysis").to_df()
 
     @validate_call(config={"arbitrary_types_allowed": True})
-    def get_CBPE_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
+    def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
         """Generate properly formatted DataFrame for CBPE analysis.
 
         Creates a DataFrame with the structure required by the CBPE estimator,
