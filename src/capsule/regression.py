@@ -12,7 +12,7 @@ from scipy.interpolate import UnivariateSpline
 from sklearn.base import RegressorMixin
 
 from capsule import BaseCapsule
-from capsule.base import ImplementsPredict, Input, Output, filter_kwargs
+from capsule.base import ImplementsPredict, Input, Output, chunker_args
 
 
 class RegressionPlots:
@@ -255,7 +255,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         X_test: Input,
         y_test: Output,
         target_index: tp.Optional[NonNegativeInt] = None,
-        **kwargs,
+        **chunk_args,
     ) -> None:
         """Initialize the regression capsule with DLE estimator.
 
@@ -269,7 +269,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             y_test: Test target data for reference.
             target_index: Index of target variable for multi-target regression.
                 If None, assumes single-target regression.
-            **kwargs: Additional keyword arguments passed to DLE estimator,
+            **chunk_args: Additional keyword arguments passed to DLE estimator,
                 to be filtered to exclude reserved parameter names.
 
         Note:
@@ -280,7 +280,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             model,
             X_test,
             y_test,
-            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
 
         self.target_index_ = target_index
@@ -304,7 +304,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             y_true="DLE_target",
             timestamp_column_name=timestamp_col,
             metrics=["mae", "mape", "mse", "rmse"],
-            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
         self.estimator_.fit(reference_data)
 

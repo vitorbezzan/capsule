@@ -17,7 +17,7 @@ from sklearn.metrics import (
 )
 
 from capsule import BaseCapsule
-from capsule.base import ImplementsProba, Input, Output, filter_kwargs
+from capsule.base import ImplementsProba, Input, Output, chunker_args
 
 
 class ClassificationPlots:
@@ -170,7 +170,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
-        self, model: ImplementsProba, X_test: Input, y_test: Output, **kwargs
+        self, model: ImplementsProba, X_test: Input, y_test: Output, **chunk_args
     ) -> None:
         """Initialize the classification capsule with CBPE estimator.
 
@@ -183,7 +183,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
                 predict_proba methods.
             X_test: Test input data for reference.
             y_test: Test target data for reference.
-            **kwargs: Additional keyword arguments passed to CBPE estimator,
+            **chunk_args: Additional keyword arguments passed to CBPE estimator,
                 to be filtered to exclude reserved parameter names.
 
         Raises:
@@ -193,7 +193,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             model,
             X_test,
             y_test,
-            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
 
         if self.n_targets_ != 1:
@@ -224,7 +224,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             y_true="CBPE_target",
             timestamp_column_name=timestamp_col,
             metrics=["f1", "roc_auc", "precision", "recall"],
-            **{k: v for k, v in kwargs.items() if k not in filter_kwargs},
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
         self.estimator_.fit(reference_data)
 
@@ -303,9 +303,14 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             pd.DataFrame(X)
             if isinstance(X, pd.DataFrame)
             else pd.DataFrame(
-                X, columns=[f"CBPE_f_{i}" for i in range(self.n_features_)]
+                X, columns=[f"CBPE_{i}_" for i in range(self.n_features_)]
             )
         )
+
+        if isinstance(X, pd.DataFrame):
+            column_mapping = {col: f"CBPE_{i}_{col}" for i, col in enumerate(X.columns)}
+            reference_df = reference_df.rename(columns=column_mapping)
+
         if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):
             reference_df["CBPE_timestamp"] = X.index
 

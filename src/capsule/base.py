@@ -18,14 +18,11 @@ type Input = NDArray[np.float64] | pd.DataFrame
 type Output = NDArray[np.float64]
 
 
-filter_kwargs = {
-    "problem_type",
-    "y_pred_proba",
-    "y_pred",
-    "y_true",
-    "timestamp_column_name",
-    "metrics",
-    "feature_column_names",
+chunker_args = {
+    "chunk_size",
+    "chunk_number",
+    "chunk_period",
+    "chunker",
 }
 
 
@@ -98,7 +95,7 @@ class BaseCapsule(ABC, BaseEstimator):
         model: ImplementsPredict | ImplementsProba,
         X_test: Input,
         y_test: Output,
-        **kwargs,
+        **chunk_args,
     ) -> None:
         """Initialize the base capsule with a trained model and test data.
 
@@ -106,7 +103,7 @@ class BaseCapsule(ABC, BaseEstimator):
             model: A trained model that implements prediction methods.
             X_test: Test input data used for reference during performance estimation.
             y_test: Test target data corresponding to X_test.
-            kwargs: Additional keyword arguments to pass to the univariate drift
+            **chunk_args: Additional keyword arguments to pass to the univariate drift
                 detector.
 
         Raises:
