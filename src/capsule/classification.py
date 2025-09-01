@@ -302,14 +302,11 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         reference_df = (
             pd.DataFrame(X)
             if isinstance(X, pd.DataFrame)
-            else pd.DataFrame(
-                X, columns=[f"CBPE_{i}_" for i in range(self.n_features_)]
-            )
+            else pd.DataFrame(X, columns=range(self.n_features_))
         )
 
-        if isinstance(X, pd.DataFrame):
-            column_mapping = {col: f"CBPE_{i}_{col}" for i, col in enumerate(X.columns)}
-            reference_df = reference_df.rename(columns=column_mapping)
+        column_mapping = {col: f"_{col}" for i, col in enumerate(reference_df.columns)}
+        reference_df = reference_df.rename(columns=column_mapping)
 
         if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):
             reference_df["CBPE_timestamp"] = X.index

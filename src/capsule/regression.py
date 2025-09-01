@@ -298,7 +298,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
         self.estimator_ = nml.DLE(
             feature_column_names=[
-                col for col in reference_data.columns if col.startswith("DLE_f_")
+                col for col in reference_data.columns if col.startswith("_")
             ],
             y_pred="DLE_prediction",
             y_true="DLE_target",
@@ -368,14 +368,11 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         reference_df = (
             pd.DataFrame(X)
             if isinstance(X, pd.DataFrame)
-            else pd.DataFrame(
-                X, columns=[f"DLE_f_{i}" for i in range(self.n_features_)]
-            )
+            else pd.DataFrame(X, columns=range(self.n_features_))
         )
 
-        if isinstance(X, pd.DataFrame):
-            column_mapping = {col: f"DLE_f_{i}" for i, col in enumerate(X.columns)}
-            reference_df = reference_df.rename(columns=column_mapping)
+        column_mapping = {col: f"_{col}" for i, col in enumerate(reference_df.columns)}
+        reference_df = reference_df.rename(columns=column_mapping)
 
         if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):
             reference_df["DLE_timestamp"] = X.index
