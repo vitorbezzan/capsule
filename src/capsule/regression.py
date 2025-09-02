@@ -298,7 +298,7 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
         self.estimator_ = nml.DLE(
             feature_column_names=[
-                col for col in reference_data.columns if col.startswith("_")
+                col for col in reference_data.columns if col.startswith("__")
             ],
             y_pred="DLE_prediction",
             y_true="DLE_target",
@@ -307,6 +307,10 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
         self.estimator_.fit(reference_data)
+        self.fit_univariate_drift(
+            X_test,
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
+        )
 
     def get_metrics(self, X: Input) -> Result:
         """Estimate regression performance metrics using DLE.
@@ -371,11 +375,11 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             else pd.DataFrame(X, columns=range(self.n_features_))
         )
 
-        column_mapping = {col: f"_{col}" for i, col in enumerate(reference_df.columns)}
+        column_mapping = {col: f"__{col}" for i, col in enumerate(reference_df.columns)}
         reference_df = reference_df.rename(columns=column_mapping)
 
         if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):
-            reference_df["DLE_timestamp"] = X.index
+            reference_df["__timestamp"] = X.index
 
         if self.target_index_ is not None:
             reference_df["DLE_prediction"] = self.model_.predict(X)[

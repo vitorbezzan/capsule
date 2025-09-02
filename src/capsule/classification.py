@@ -228,6 +228,11 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         )
         self.estimator_.fit(reference_data)
 
+        self.fit_univariate_drift(
+            X_test,
+            **{k: v for k, v in chunk_args.items() if k in chunker_args},
+        )
+
     @validate_call(config={"arbitrary_types_allowed": True})
     def predict_proba(self, X: Input) -> Output:
         """Generate class probability predictions using the wrapped model.
@@ -305,7 +310,7 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
             else pd.DataFrame(X, columns=range(self.n_features_))
         )
 
-        column_mapping = {col: f"_{col}" for i, col in enumerate(reference_df.columns)}
+        column_mapping = {col: f"__{col}" for i, col in enumerate(reference_df.columns)}
         reference_df = reference_df.rename(columns=column_mapping)
 
         if isinstance(X, pd.DataFrame) and isinstance(X.index, pd.DatetimeIndex):

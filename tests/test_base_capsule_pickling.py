@@ -10,6 +10,7 @@ from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 
 from capsule import ClassificationCapsule
+import nannyml as nml
 
 
 @pytest.fixture
@@ -42,6 +43,13 @@ def capsule_instance(trained_model_and_data):
     return ClassificationCapsule(model=model, X_test=X_test, y_test=y_test)
 
 
+def _assert_drift_is_set(capsule):
+    """Call fit_univariate_drift and check drift_ is set and correct type"""
+    capsule.fit_univariate_drift(capsule.X_test_)
+    assert hasattr(capsule, "drift_")
+    assert isinstance(capsule.drift_, nml.UnivariateDriftCalculator)
+
+
 class TestBaseCapsulePickling:
     """Test class for BaseCapsule pickling functionality."""
 
@@ -63,6 +71,9 @@ class TestBaseCapsulePickling:
             predictions_unpickled = unpickled_capsule.predict(unpickled_capsule.X_test_)
             assert np.array_equal(predictions_original, predictions_unpickled)
 
+            # Check drift_ is settable and correct
+            _assert_drift_is_set(unpickled_capsule)
+
     def test_pickle_with_encryption_key(self, capsule_instance):
         """Test pickling and unpickling with encryption key."""
         encryption_key = "my_secret_key_123456789012345678"  # 32 chars for AES-256
@@ -81,6 +92,8 @@ class TestBaseCapsulePickling:
             predictions_unpickled = unpickled_capsule.predict(unpickled_capsule.X_test_)
 
             assert np.array_equal(predictions_original, predictions_unpickled)
+
+            _assert_drift_is_set(unpickled_capsule)
 
     def test_pickle_with_key_then_unpickle_without_key_fails(self, capsule_instance):
         """Test that unpickling encrypted data without key raises RuntimeError."""
@@ -120,6 +133,7 @@ class TestBaseCapsulePickling:
 
             assert np.array_equal(unpickled_capsule.X_test_, capsule_instance.X_test_)
             assert np.array_equal(unpickled_capsule.y_test_, capsule_instance.y_test_)
+            _assert_drift_is_set(unpickled_capsule)
 
     def test_getstate_without_key(self, capsule_instance):
         """Test __getstate__ method without encryption key."""
@@ -160,6 +174,7 @@ class TestBaseCapsulePickling:
             assert np.array_equal(new_capsule.X_test_, capsule_instance.X_test_)
             assert np.array_equal(new_capsule.y_test_, capsule_instance.y_test_)
             assert new_capsule.n_features_ == capsule_instance.n_features_
+            _assert_drift_is_set(new_capsule)
 
     def test_setstate_with_key(self, capsule_instance):
         """Test __setstate__ method with encryption key."""
@@ -174,6 +189,7 @@ class TestBaseCapsulePickling:
             assert np.array_equal(new_capsule.X_test_, capsule_instance.X_test_)
             assert np.array_equal(new_capsule.y_test_, capsule_instance.y_test_)
             assert new_capsule.n_features_ == capsule_instance.n_features_
+            _assert_drift_is_set(new_capsule)
 
     def test_encryption_key_length_validation(self, capsule_instance):
         """Test that various encryption key lengths work correctly."""
@@ -191,6 +207,7 @@ class TestBaseCapsulePickling:
                 assert np.array_equal(
                     unpickled_capsule.X_test_, capsule_instance.X_test_
                 )
+                _assert_drift_is_set(unpickled_capsule)
 
     def test_multiple_pickle_unpickle_cycles(self, capsule_instance):
         """Test multiple pickle/unpickle cycles maintain data integrity."""
@@ -212,6 +229,7 @@ class TestBaseCapsulePickling:
                 )
                 predictions_current = current_capsule.predict(current_capsule.X_test_)
                 assert np.array_equal(predictions_original, predictions_current)
+                _assert_drift_is_set(current_capsule)
 
 
 class TestBaseCapsuleEnvironmentVariables:
@@ -247,3 +265,5 @@ class TestBaseCapsuleEnvironmentVariables:
         # Both should have the same data as original
         assert np.array_equal(new_capsule1.X_test_, capsule_instance.X_test_)
         assert np.array_equal(new_capsule2.X_test_, capsule_instance.X_test_)
+        _assert_drift_is_set(new_capsule1)
+        _assert_drift_is_set(new_capsule2)

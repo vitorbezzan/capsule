@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 import pandas as pd
+import nannyml as nml
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from nannyml.base import Result
 from numpy.typing import NDArray
@@ -88,6 +89,8 @@ class BaseCapsule(ABC, BaseEstimator):
         Capsules are immutable wrappers around trained models and cannot
         be fitted after creation.
     """
+
+    drift_: nml.UnivariateDriftCalculator
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
@@ -225,6 +228,17 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         raise NotImplementedError("Must be implemented in subclasses.")
 
+    def get_univariate_drift(self, X: Input):
+        """Estimate univariate drift on analysis data.
+
+        Args:
+            X: Analysis input data for drift estimation.
+
+        Returns:
+            Univariate drift estimation results.
+        """
+        return self.drift_.calculate(X).filter(period="analysis").to_df()
+
     @property
     @abstractmethod
     def plots(self) -> object:
@@ -235,3 +249,28 @@ class BaseCapsule(ABC, BaseEstimator):
     def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
         """Formats data to be used in metrics calculations and plots."""
         raise NotImplementedError("Must be implemented in subclasses.")
+
+    def fit_univariate_drift(self, X: Input, **chunk_args) -> None:
+        """Fit univariate drift detector on reference data.
+
+        Args:
+            X: Reference input data for fitting the drift detector.
+            **chunk_args: Additional keyword arguments to pass to the univariate drift
+                detector.
+        """
+        df = self.format_data(X)
+        df = df[[c for c in df.columns if c.startswith("_")]]
+
+        self.drift_ = nml.UnivariateDriftCalculator(
+            column_names=[c for c in df.columns if c.startswith("_")],
+            treat_as_categorical=df.select_dtypes(
+                include=["category", "object"]
+            ).columns.tolist(),
+            timestamp_column_name="__timestamp"
+            if "__timestamp" in df.columns
+            else None,
+            continuous_methods=["kolmogorov_smirnov", "jensen_shannon"],
+            categorical_methods=["chi2", "jensen_shannon"],
+            **chunk_args,
+        )
+        self.drift_.fit(df)
