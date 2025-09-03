@@ -228,17 +228,6 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         raise NotImplementedError("Must be implemented in subclasses.")
 
-    def get_univariate_drift(self, X: Input):
-        """Estimate univariate drift on analysis data.
-
-        Args:
-            X: Analysis input data for drift estimation.
-
-        Returns:
-            Univariate drift estimation results.
-        """
-        return self.drift_.calculate(X).filter(period="analysis").to_df()
-
     @property
     @abstractmethod
     def plots(self) -> object:
@@ -274,3 +263,17 @@ class BaseCapsule(ABC, BaseEstimator):
             **chunk_args,
         )
         self.drift_.fit(df)
+
+    def get_univariate_drift(self, X: Input):
+        """Estimate univariate drift on analysis data.
+
+        Args:
+            X: Analysis input data for drift estimation.
+
+        Returns:
+            Univariate drift estimation results.
+        """
+        df = self.format_data(X)
+        df = df[[c for c in df.columns if c.startswith("_")]]
+
+        return self.drift_.calculate(df).filter(period="analysis").to_df()

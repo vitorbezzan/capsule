@@ -47,6 +47,10 @@ def test_multiclass(trained_multiclass_model_data):
     assert capsule.n_classes_ == 3
     assert not capsule.get_metrics(X_test).empty
 
+    drift_df = capsule.get_univariate_drift(X_test)
+    assert drift_df is not None
+    assert not drift_df.empty
+
 
 def test_binary(trained_binary_model_data):
     """Test binary classification."""
@@ -55,6 +59,11 @@ def test_binary(trained_binary_model_data):
 
     assert capsule.n_classes_ == 2
     assert not capsule.get_metrics(X_test).empty
+
+    capsule.fit_univariate_drift(X_test)
+    drift_df = capsule.get_univariate_drift(X_test)
+    assert drift_df is not None
+    assert not drift_df.empty
 
 
 @pytest.fixture

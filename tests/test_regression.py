@@ -66,6 +66,10 @@ def test_single_target_diabetes(trained_single_target_model_data):
     assert capsule.n_targets_ == 1
     assert not capsule.get_metrics(X_test).empty
 
+    drift_df = capsule.get_univariate_drift(X_test)
+    assert drift_df is not None
+    assert not drift_df.empty
+
 
 def test_multi_target_diabetes(trained_multi_target_model_data):
     """Test RegressionCapsule with multi-target regression data."""
@@ -81,8 +85,16 @@ def test_multi_target_diabetes(trained_multi_target_model_data):
     assert capsule0.n_targets_ == 2
     assert not capsule0.get_metrics(X_test).empty
 
+    drift_df0 = capsule0.get_univariate_drift(X_test)
+    assert drift_df0 is not None
+    assert not drift_df0.empty
+
     assert capsule1.n_targets_ == 2
     assert not capsule1.get_metrics(X_test).empty
+
+    drift_df1 = capsule1.get_univariate_drift(X_test)
+    assert drift_df1 is not None
+    assert not drift_df1.empty
 
 
 def test_scatter_plot(regression_capsule):
