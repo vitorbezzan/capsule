@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href=".." rel="prev"/>
+<link href="../api_classification/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.12" name="generator"/>
+<title>Base - Capsule</title>
+<link href="../assets/stylesheets/main.2afb09e1.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../assets/_mkdocstrings.css" rel="stylesheet"/>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#src.capsule.base">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Capsule" class="md-header__button md-logo" data-md-component="logo" href=".." title="Capsule">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Capsule
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Base
+            
+          </span>
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Capsule" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Capsule">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Capsule
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    API
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Base
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Base
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base">
+<span class="md-ellipsis">
+      base
+    </span>
+</a>
+<nav aria-label="base" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule">
+<span class="md-ellipsis">
+      BaseCapsule
+    </span>
+</a>
+<nav aria-label="BaseCapsule" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.plots">
+<span class="md-ellipsis">
+      plots
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__getstate__">
+<span class="md-ellipsis">
+      __getstate__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__init__">
+<span class="md-ellipsis">
+      __init__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__setstate__">
+<span class="md-ellipsis">
+      __setstate__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.fit">
+<span class="md-ellipsis">
+      fit
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.fit_univariate_drift">
+<span class="md-ellipsis">
+      fit_univariate_drift
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.format_data">
+<span class="md-ellipsis">
+      format_data
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.get_metrics">
+<span class="md-ellipsis">
+      get_metrics
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.get_univariate_drift">
+<span class="md-ellipsis">
+      get_univariate_drift
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsPredict">
+<span class="md-ellipsis">
+      ImplementsPredict
+    </span>
+</a>
+<nav aria-label="ImplementsPredict" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsPredict.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba">
+<span class="md-ellipsis">
+      ImplementsProba
+    </span>
+</a>
+<nav aria-label="ImplementsProba" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba.predict_proba">
+<span class="md-ellipsis">
+      predict_proba
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../api_classification/">
+<span class="md-ellipsis">
+    ClassifierCV
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../api_regression/">
+<span class="md-ellipsis">
+    RegressionCV
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../license/">
+<span class="md-ellipsis">
+    License
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base">
+<span class="md-ellipsis">
+      base
+    </span>
+</a>
+<nav aria-label="base" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule">
+<span class="md-ellipsis">
+      BaseCapsule
+    </span>
+</a>
+<nav aria-label="BaseCapsule" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.plots">
+<span class="md-ellipsis">
+      plots
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__getstate__">
+<span class="md-ellipsis">
+      __getstate__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__init__">
+<span class="md-ellipsis">
+      __init__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.__setstate__">
+<span class="md-ellipsis">
+      __setstate__
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.fit">
+<span class="md-ellipsis">
+      fit
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.fit_univariate_drift">
+<span class="md-ellipsis">
+      fit_univariate_drift
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.format_data">
+<span class="md-ellipsis">
+      format_data
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.get_metrics">
+<span class="md-ellipsis">
+      get_metrics
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.get_univariate_drift">
+<span class="md-ellipsis">
+      get_univariate_drift
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.BaseCapsule.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsPredict">
+<span class="md-ellipsis">
+      ImplementsPredict
+    </span>
+</a>
+<nav aria-label="ImplementsPredict" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsPredict.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba">
+<span class="md-ellipsis">
+      ImplementsProba
+    </span>
+</a>
+<nav aria-label="ImplementsProba" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba.predict">
+<span class="md-ellipsis">
+      predict
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#src.capsule.base.ImplementsProba.predict_proba">
+<span class="md-ellipsis">
+      predict_proba
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Base.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m14 2 6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm4 18V9h-5V4H6v16zm-6-1-4-4h2.5v-3h3v3H16z"></path></svg></body></html></a><a class="md-content__button md-icon" href="index.pdf" target="_blank" title="View as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 .41.12.8.34 1.12.07.11.16.21.25.29.36.37.86.59 1.41.59h7.53c-.53-.58-.92-1.25-1.18-2H6V4h7v5h5v3c.7 0 1.37.12 2 .34V8zm4 21 5-4.5-3-2.7-2-1.8v3h-4v3h4z"></path></svg></body></html></a>
+<h1>Base</h1>
+<div class="doc doc-object doc-module">
+<h2 class="doc doc-heading" id="src.capsule.base">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code> <span class="doc doc-object-name doc-module-name">base</span>
+</h2>
+<div class="doc doc-contents first">
+<p>Base classes for the capsule package.</p>
+<div class="doc doc-children">
+<div class="doc doc-object doc-class">
+<h3 class="doc doc-heading" id="src.capsule.base.BaseCapsule">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc doc-object-name doc-class-name">BaseCapsule</span>
+</h3>
+<div class="doc doc-contents">
+<p class="doc doc-class-bases">
+              Bases: <code><span title="abc.ABC">ABC</span></code>, <code><span title="sklearn.base.BaseEstimator">BaseEstimator</span></code></p>
+<p>Base abstract class for all capsule implementations.</p>
+<p>This class provides the common interface and functionality for both
+regression and classification capsules. It handles model wrapping,
+serialization with optional encryption, and defines the basic contract
+that all capsules must follow.</p>
+<details class="note" open="">
+<summary>Note</summary>
+<p>Capsules are immutable wrappers around trained models and cannot
+be fitted after creation.</p>
+</details>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseCapsule</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base abstract class for all capsule implementations.</span>
+
+<span class="sd">    This class provides the common interface and functionality for both</span>
+<span class="sd">    regression and classification capsules. It handles model wrapping,</span>
+<span class="sd">    serialization with optional encryption, and defines the basic contract</span>
+<span class="sd">    that all capsules must follow.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Capsules are immutable wrappers around trained models and cannot</span>
+<span class="sd">        be fitted after creation.</span>
+<span class="sd">    """</span>
+
+    <span class="n">drift_</span><span class="p">:</span> <span class="n">nml</span><span class="o">.</span><span class="n">UnivariateDriftCalculator</span>
+
+    <span class="nd">@validate_call</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">"arbitrary_types_allowed"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">ImplementsPredict</span> <span class="o">|</span> <span class="n">ImplementsProba</span><span class="p">,</span>
+        <span class="n">X_test</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span>
+        <span class="n">y_test</span><span class="p">:</span> <span class="n">Output</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">chunk_args</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the base capsule with a trained model and test data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: A trained model that implements prediction methods.</span>
+<span class="sd">            X_test: Test input data used for reference during performance estimation.</span>
+<span class="sd">            y_test: Test target data corresponding to X_test.</span>
+<span class="sd">            **chunk_args: Additional keyword arguments to pass to the univariate drift</span>
+<span class="sd">                detector.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If the input data fails validation checks.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="n">check_X_y</span><span class="p">(</span>
+            <span class="n">X_test</span><span class="p">,</span>
+            <span class="n">y_test</span><span class="p">,</span>
+            <span class="n">ensure_all_finite</span><span class="o">=</span><span class="s2">"allow-nan"</span><span class="p">,</span>
+            <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">y_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_test_</span> <span class="o">=</span> <span class="n">X_test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test_</span> <span class="o">=</span> <span class="n">y_test</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_targets_</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">y_test</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Prepare capsule state for serialization with optional encryption.</span>
+
+<span class="sd">        If the CAPSULE_KEY environment variable is set, the capsule state</span>
+<span class="sd">        will be encrypted using AES-GCM encryption before serialization.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary containing serialized (and possibly encrypted) state.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CAPSULE_KEY"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nonce</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">encrypted</span> <span class="o">=</span> <span class="n">AESGCM</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"CAPSULE_KEY"</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+                <span class="n">nonce</span><span class="p">,</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">),</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span><span class="s2">"nonce"</span><span class="p">:</span> <span class="n">nonce</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="n">encrypted</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">:</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Restore capsule state from serialized data with optional decryption.</span>
+
+<span class="sd">        If the state contains encrypted data (indicated by presence of 'nonce'),</span>
+<span class="sd">        it will be decrypted using the CAPSULE_KEY environment variable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state: Dictionary containing serialized state data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If encrypted data is found but CAPSULE_KEY is not set.</span>
+<span class="sd">        """</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">"nonce"</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CAPSULE_KEY"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">"CAPSULE_KEY not set. Cannot unpickle encrypted capsule."</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">AESGCM</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">"nonce"</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Output</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"BaseCapsule"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Attempt to fit the capsule.</span>
+
+<span class="sd">        Capsules wrap pre-trained models and cannot be fitted. This method</span>
+<span class="sd">        always raises NotImplementedError to maintain the immutable nature</span>
+<span class="sd">        of capsules.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data (ignored).</span>
+<span class="sd">            y: Target data (ignored).</span>
+<span class="sd">            **fit_params: Additional parameters (ignored).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Never returns - always raises exception.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: Always raised since capsules cannot be fitted.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Capsules cannot be fit."</span><span class="p">)</span>
+
+    <span class="nd">@validate_call</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">"arbitrary_types_allowed"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate predictions using the wrapped model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data for prediction.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Model predictions for the input data.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Estimate performance metrics on analysis data.</span>
+
+<span class="sd">        This abstract method must be implemented by subclasses to provide</span>
+<span class="sd">        performance estimation capabilities specific to their task type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Analysis data for performance estimation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Performance estimation results.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If not implemented by subclass.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Must be implemented in subclasses."</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">plots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get plots for the capsule."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Must be implemented in subclasses."</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">format_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Output</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Formats data to be used in metrics calculations and plots."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Must be implemented in subclasses."</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit_univariate_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="o">**</span><span class="n">chunk_args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Fit univariate drift detector on reference data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Reference input data for fitting the drift detector.</span>
+<span class="sd">            **chunk_args: Additional keyword arguments to pass to the univariate drift</span>
+<span class="sd">                detector.</span>
+<span class="sd">        """</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span> <span class="o">=</span> <span class="n">nml</span><span class="o">.</span><span class="n">UnivariateDriftCalculator</span><span class="p">(</span>
+            <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)],</span>
+            <span class="n">treat_as_categorical</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span>
+                <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">"category"</span><span class="p">,</span> <span class="s2">"object"</span><span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="n">timestamp_column_name</span><span class="o">=</span><span class="s2">"__timestamp"</span>
+            <span class="k">if</span> <span class="s2">"__timestamp"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">continuous_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"kolmogorov_smirnov"</span><span class="p">,</span> <span class="s2">"jensen_shannon"</span><span class="p">],</span>
+            <span class="n">categorical_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"chi2"</span><span class="p">,</span> <span class="s2">"jensen_shannon"</span><span class="p">],</span>
+            <span class="o">**</span><span class="n">chunk_args</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_univariate_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Estimate univariate drift on analysis data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Analysis input data for drift estimation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Univariate drift estimation results.</span>
+<span class="sd">        """</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="s2">"analysis"</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</details>
+<div class="doc doc-children">
+<div class="doc doc-object doc-attribute">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.plots">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code> <span class="doc doc-object-name doc-attribute-name">plots</span>
+<span class="doc doc-labels">
+<small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+<small class="doc doc-label doc-label-property"><code>property</code></small>
+</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">plots</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Get plots for the capsule.</p>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.__getstate__">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">__getstate__</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">__getstate__</span><span class="p">()</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Prepare capsule state for serialization with optional encryption.</p>
+<p>If the CAPSULE_KEY environment variable is set, the capsule state
+will be encrypted using AES-GCM encryption before serialization.</p>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="dict">dict</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Dictionary containing serialized (and possibly encrypted) state.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Prepare capsule state for serialization with optional encryption.</span>
+
+<span class="sd">    If the CAPSULE_KEY environment variable is set, the capsule state</span>
+<span class="sd">    will be encrypted using AES-GCM encryption before serialization.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary containing serialized (and possibly encrypted) state.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CAPSULE_KEY"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nonce</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">encrypted</span> <span class="o">=</span> <span class="n">AESGCM</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"CAPSULE_KEY"</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+            <span class="n">nonce</span><span class="p">,</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">),</span>
+            <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"nonce"</span><span class="p">:</span> <span class="n">nonce</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="n">encrypted</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">:</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)}</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.__init__">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">__init__</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="fm">__init__</span><span class="p">(</span><span class="nf">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="o">**</span><span class="n">chunk_args</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Initialize the base capsule with a trained model and test data.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>model</code>
+</td>
+<td>
+<code><a class="autorefs autorefs-internal" href="#src.capsule.base.ImplementsPredict" title="            ImplementsPredict (src.capsule.base.ImplementsPredict)">ImplementsPredict</a> | <a class="autorefs autorefs-internal" href="#src.capsule.base.ImplementsProba" title="            ImplementsProba (src.capsule.base.ImplementsProba)">ImplementsProba</a></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>A trained model that implements prediction methods.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>X_test</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Test input data used for reference during performance estimation.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>y_test</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Output">Output</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Test target data corresponding to X_test.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>**chunk_args</code>
+</td>
+<td>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Additional keyword arguments to pass to the univariate drift
+detector.</p>
+</div>
+</td>
+<td>
+<code>{}</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Raises:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="ValidationError">ValidationError</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>If the input data fails validation checks.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@validate_call</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">"arbitrary_types_allowed"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">ImplementsPredict</span> <span class="o">|</span> <span class="n">ImplementsProba</span><span class="p">,</span>
+    <span class="n">X_test</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span>
+    <span class="n">y_test</span><span class="p">:</span> <span class="n">Output</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">chunk_args</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize the base capsule with a trained model and test data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: A trained model that implements prediction methods.</span>
+<span class="sd">        X_test: Test input data used for reference during performance estimation.</span>
+<span class="sd">        y_test: Test target data corresponding to X_test.</span>
+<span class="sd">        **chunk_args: Additional keyword arguments to pass to the univariate drift</span>
+<span class="sd">            detector.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If the input data fails validation checks.</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="n">check_X_y</span><span class="p">(</span>
+        <span class="n">X_test</span><span class="p">,</span>
+        <span class="n">y_test</span><span class="p">,</span>
+        <span class="n">ensure_all_finite</span><span class="o">=</span><span class="s2">"allow-nan"</span><span class="p">,</span>
+        <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">y_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">X_test_</span> <span class="o">=</span> <span class="n">X_test</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y_test_</span> <span class="o">=</span> <span class="n">y_test</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">model_</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_features_</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_targets_</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">y_test</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.__setstate__">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">__setstate__</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">__setstate__</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Restore capsule state from serialized data with optional decryption.</p>
+<p>If the state contains encrypted data (indicated by presence of 'nonce'),
+it will be decrypted using the CAPSULE_KEY environment variable.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>state</code>
+</td>
+<td>
+<code><span title="dict">dict</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Dictionary containing serialized state data.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Raises:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="RuntimeError">RuntimeError</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>If encrypted data is found but CAPSULE_KEY is not set.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Restore capsule state from serialized data with optional decryption.</span>
+
+<span class="sd">    If the state contains encrypted data (indicated by presence of 'nonce'),</span>
+<span class="sd">    it will be decrypted using the CAPSULE_KEY environment variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state: Dictionary containing serialized state data.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If encrypted data is found but CAPSULE_KEY is not set.</span>
+<span class="sd">    """</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">"nonce"</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CAPSULE_KEY"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">"CAPSULE_KEY not set. Cannot unpickle encrypted capsule."</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">AESGCM</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">"nonce"</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.fit">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">fit</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Attempt to fit the capsule.</p>
+<p>Capsules wrap pre-trained models and cannot be fitted. This method
+always raises NotImplementedError to maintain the immutable nature
+of capsules.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Input data (ignored).</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>y</code>
+</td>
+<td>
+<code><span title="typing.Optional">Optional</span>[<span title="src.capsule.base.Output">Output</span>]</code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Target data (ignored).</p>
+</div>
+</td>
+<td>
+<code>None</code>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>**fit_params</code>
+</td>
+<td>
+<code><span title="dict">dict</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Additional parameters (ignored).</p>
+</div>
+</td>
+<td>
+<code>{}</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><a class="autorefs autorefs-internal" href="#src.capsule.base.BaseCapsule" title="            BaseCapsule (src.capsule.base.BaseCapsule)">BaseCapsule</a></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Never returns - always raises exception.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Raises:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="NotImplementedError">NotImplementedError</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Always raised since capsules cannot be fitted.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Output</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">:</span> <span class="nb">dict</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"BaseCapsule"</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Attempt to fit the capsule.</span>
+
+<span class="sd">    Capsules wrap pre-trained models and cannot be fitted. This method</span>
+<span class="sd">    always raises NotImplementedError to maintain the immutable nature</span>
+<span class="sd">    of capsules.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input data (ignored).</span>
+<span class="sd">        y: Target data (ignored).</span>
+<span class="sd">        **fit_params: Additional parameters (ignored).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Never returns - always raises exception.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError: Always raised since capsules cannot be fitted.</span>
+<span class="sd">    """</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Capsules cannot be fit."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.fit_univariate_drift">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">fit_univariate_drift</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fit_univariate_drift</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">chunk_args</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Fit univariate drift detector on reference data.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Reference input data for fitting the drift detector.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>**chunk_args</code>
+</td>
+<td>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Additional keyword arguments to pass to the univariate drift
+detector.</p>
+</div>
+</td>
+<td>
+<code>{}</code>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fit_univariate_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="o">**</span><span class="n">chunk_args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Fit univariate drift detector on reference data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Reference input data for fitting the drift detector.</span>
+<span class="sd">        **chunk_args: Additional keyword arguments to pass to the univariate drift</span>
+<span class="sd">            detector.</span>
+<span class="sd">    """</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span> <span class="o">=</span> <span class="n">nml</span><span class="o">.</span><span class="n">UnivariateDriftCalculator</span><span class="p">(</span>
+        <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)],</span>
+        <span class="n">treat_as_categorical</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span>
+            <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">"category"</span><span class="p">,</span> <span class="s2">"object"</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">timestamp_column_name</span><span class="o">=</span><span class="s2">"__timestamp"</span>
+        <span class="k">if</span> <span class="s2">"__timestamp"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">continuous_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"kolmogorov_smirnov"</span><span class="p">,</span> <span class="s2">"jensen_shannon"</span><span class="p">],</span>
+        <span class="n">categorical_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"chi2"</span><span class="p">,</span> <span class="s2">"jensen_shannon"</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">chunk_args</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.format_data">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">format_data</span>
+<span class="doc doc-labels">
+<small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">format_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Formats data to be used in metrics calculations and plots.</p>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">format_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Output</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Formats data to be used in metrics calculations and plots."""</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Must be implemented in subclasses."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.get_metrics">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">get_metrics</span>
+<span class="doc doc-labels">
+<small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_metrics</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Estimate performance metrics on analysis data.</p>
+<p>This abstract method must be implemented by subclasses to provide
+performance estimation capabilities specific to their task type.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Analysis data for performance estimation.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="nannyml.base.Result">Result</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Performance estimation results.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Raises:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="NotImplementedError">NotImplementedError</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>If not implemented by subclass.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Estimate performance metrics on analysis data.</span>
+
+<span class="sd">    This abstract method must be implemented by subclasses to provide</span>
+<span class="sd">    performance estimation capabilities specific to their task type.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Analysis data for performance estimation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Performance estimation results.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError: If not implemented by subclass.</span>
+<span class="sd">    """</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Must be implemented in subclasses."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.get_univariate_drift">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">get_univariate_drift</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_univariate_drift</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Estimate univariate drift on analysis data.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Analysis input data for drift estimation.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Univariate drift estimation results.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_univariate_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Estimate univariate drift on analysis data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Analysis input data for drift estimation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Univariate drift estimation results.</span>
+<span class="sd">    """</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]]</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">drift_</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="s2">"analysis"</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.BaseCapsule.predict">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">predict</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Generate predictions using the wrapped model.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Input data for prediction.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="src.capsule.base.Output">Output</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Model predictions for the input data.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@validate_call</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">"arbitrary_types_allowed"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate predictions using the wrapped model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input data for prediction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Model predictions for the input data.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="doc doc-object doc-class">
+<h3 class="doc doc-heading" id="src.capsule.base.ImplementsPredict">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc doc-object-name doc-class-name">ImplementsPredict</span>
+</h3>
+<div class="doc doc-contents">
+<p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+<p>Protocol for classes that implement a predict method.</p>
+<p>This protocol defines the interface for models that can make predictions.
+Classes implementing this protocol must define a predict method that takes
+input data and returns predictions.</p>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@tp</span><span class="o">.</span><span class="n">runtime_checkable</span>
+<span class="k">class</span> <span class="nc">ImplementsPredict</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for classes that implement a predict method.</span>
+
+<span class="sd">    This protocol defines the interface for models that can make predictions.</span>
+<span class="sd">    Classes implementing this protocol must define a predict method that takes</span>
+<span class="sd">    input data and returns predictions.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Predict output for the given input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data for prediction.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Predicted output values.</span>
+<span class="sd">        """</span>
+</code></pre></div></td></tr></table></div>
+</details>
+<div class="doc doc-children">
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.ImplementsPredict.predict">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">predict</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Predict output for the given input.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Input data for prediction.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="src.capsule.base.Output">Output</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Predicted output values.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Predict output for the given input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input data for prediction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Predicted output values.</span>
+<span class="sd">    """</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="doc doc-object doc-class">
+<h3 class="doc doc-heading" id="src.capsule.base.ImplementsProba">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code> <span class="doc doc-object-name doc-class-name">ImplementsProba</span>
+</h3>
+<div class="doc doc-contents">
+<p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+<p>Protocol for classes that implement predict and predict_proba methods.</p>
+<p>This protocol extends ImplementsPredict to include probability prediction
+capabilities. Classes implementing this protocol must define both predict
+and predict_proba methods for classification tasks.</p>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@tp</span><span class="o">.</span><span class="n">runtime_checkable</span>
+<span class="k">class</span> <span class="nc">ImplementsProba</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for classes that implement predict and predict_proba methods.</span>
+
+<span class="sd">    This protocol extends ImplementsPredict to include probability prediction</span>
+<span class="sd">    capabilities. Classes implementing this protocol must define both predict</span>
+<span class="sd">    and predict_proba methods for classification tasks.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Predict output for the given input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data for prediction.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Predicted class labels.</span>
+<span class="sd">        """</span>
+
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Predict class probabilities for the given input.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X: Input data for probability prediction.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Predicted class probabilities.</span>
+<span class="sd">        """</span>
+</code></pre></div></td></tr></table></div>
+</details>
+<div class="doc doc-children">
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.ImplementsProba.predict">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">predict</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Predict output for the given input.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Input data for prediction.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="src.capsule.base.Output">Output</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Predicted class labels.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Predict output for the given input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input data for prediction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Predicted class labels.</span>
+<span class="sd">    """</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h4 class="doc doc-heading" id="src.capsule.base.ImplementsProba.predict_proba">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code> <span class="doc doc-object-name doc-function-name">predict_proba</span>
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Predict class probabilities for the given input.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>X</code>
+</td>
+<td>
+<code><span title="src.capsule.base.Input">Input</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Input data for probability prediction.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="src.capsule.base.Output">Output</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Predicted class probabilities.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+<summary>Source code in <code>src/capsule/base.py</code></summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Predict class probabilities for the given input.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input data for probability prediction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Predicted class probabilities.</span>
+<span class="sd">    """</span>
+</code></pre></div></td></tr></table></div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+</body>
+</html>
