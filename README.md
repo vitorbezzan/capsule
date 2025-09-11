@@ -17,9 +17,8 @@ Capsule is a Python library for machine learning tasks, providing a unified inte
 
 ### Install from GitHub
 ```bash
-pip install git+https://github.com/<your-username>/capsule.git
+pip install git+https://github.com/vitorbezzan/capsule.git
 ```
-Replace `<your-username>` with the actual GitHub username or organization.
 
 ## Development Setup
 
