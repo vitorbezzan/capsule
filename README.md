@@ -1,8 +1,7 @@
 # Capsule
 
-[![python](https://img.shields.io/badge/python-3.11-blue?style=for-the-badge)](http://python.org)
 [![python](https://img.shields.io/badge/python-3.12-blue?style=for-the-badge)](http://python.org)
-[![python](https://img.shields.io/badge/python-3.13-red?style=for-the-badge)](http://python.org)
+[![python](https://img.shields.io/badge/python-3.13-blue?style=for-the-badge)](http://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 
