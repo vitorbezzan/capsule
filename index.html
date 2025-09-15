@@ -88,9 +88,16 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#features">
+<a class="md-nav__link" href="#key-features">
 <span class="md-ellipsis">
-      Features
+      ✨ Key Features
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-start">
+<span class="md-ellipsis">
+      🚀 Quick Start
     </span>
 </a>
 </li>
@@ -233,9 +240,16 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#features">
+<a class="md-nav__link" href="#key-features">
 <span class="md-ellipsis">
-      Features
+      ✨ Key Features
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-start">
+<span class="md-ellipsis">
+      🚀 Quick Start
     </span>
 </a>
 </li>
@@ -321,13 +335,42 @@
 <p><a href="http://python.org"><img alt="python" src="https://img.shields.io/badge/python-3.12-blue?style=for-the-badge"/></a>
 <a href="http://python.org"><img alt="python" src="https://img.shields.io/badge/python-3.13-blue?style=for-the-badge"/></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/></a></p>
-<p>Capsule is a Python library for machine learning tasks, providing a unified interface for classification and regression models. The source code is organized in the <code>src/capsule/</code> directory, with modules for base functionality, classification, and regression.</p>
-<h2 id="features">Features</h2>
+<p><strong>Capsule</strong> is a production-ready Python library that gives machine learning models superpowers in production environments. It provides immutable model wrappers with built-in drift detection, performance monitoring, secure serialization, and visualization capabilities for both classification and regression tasks.</p>
+<p>Unlike traditional ML libraries that focus on training, Capsule specializes in production deployment concerns—wrapping your trained models with enterprise-grade monitoring and security features while maintaining a clean, unified API.</p>
+<h2 id="key-features">✨ Key Features</h2>
 <ul>
-<li>Unified API for classification and regression</li>
-<li>Extensible base classes</li>
-<li>Easy integration with other Python ML libraries</li>
+<li><strong>🔒 Secure Model Serialization</strong>: Optional AES-GCM encryption for model persistence and deployment</li>
+<li><strong>📊 Built-in Drift Detection</strong>: Automatic univariate drift monitoring using NannyML integration</li>
+<li><strong>📈 Rich Visualizations</strong>: Out-of-the-box plotting for model evaluation (ROC curves, scatter plots, etc.)</li>
+<li><strong>🎯 Unified API</strong>: Consistent interface for both classification and regression models</li>
+<li><strong>🔧 Framework Agnostic</strong>: Works with any scikit-learn compatible model</li>
+<li><strong>🛡️ Production Ready</strong>: Immutable wrappers prevent accidental model modification</li>
+<li><strong>📦 Type Safe</strong>: Full type hints and runtime validation with Pydantic</li>
+<li><strong>🔍 Performance Monitoring</strong>: Track model performance degradation over time</li>
+<li><strong>🎨 Extensible</strong>: Easy to extend with custom monitoring and visualization capabilities</li>
 </ul>
+<h2 id="quick-start">🚀 Quick Start</h2>
+<pre><code class="language-python">from capsule import ClassificationCapsule, RegressionCapsule
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Train your model as usual
+model = RandomForestClassifier()
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+model.fit(X_train, y_train)
+
+# Wrap it in a Capsule for production superpowers
+capsule = ClassificationCapsule(model, X_test, y_test)
+
+# Make predictions with drift detection
+predictions = capsule.predict(X_new)
+
+# Visualize performance
+capsule.plots.roc_curve()
+
+# Monitor for drift
+drift_results = capsule.detect_drift(X_production)
+</code></pre>
 <h2 id="installation">Installation</h2>
 <h3 id="install-from-github">Install from GitHub</h3>
 <pre><code class="language-bash">pip install git+https://github.com/vitorbezzan/capsule.git
