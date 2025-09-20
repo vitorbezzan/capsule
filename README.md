@@ -58,7 +58,7 @@ To set up Capsule for development, follow these detailed steps:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/capsule.git
+git clone https://github.com/vitorbezzan/capsule.git
 cd capsule
 ```
 
