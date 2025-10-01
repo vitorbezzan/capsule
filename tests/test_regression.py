@@ -100,7 +100,7 @@ def test_multi_target_diabetes(trained_multi_target_model_data):
 def test_scatter_plot(regression_capsule):
     """Test the scatter method of RegressionPlots."""
     capsule = regression_capsule
-    ax = capsule.plots.scatter()
+    _, ax = capsule.plots.scatter()
 
     assert ax.get_xlabel() == "True Values"
     assert ax.get_ylabel() == "Predicted Values"
@@ -114,7 +114,7 @@ def test_scatter_plot(regression_capsule):
 def test_residuals_plot(regression_capsule):
     """Test the residuals method of RegressionPlots."""
     capsule = regression_capsule
-    ax = capsule.plots.residuals_plot()
+    _, ax = capsule.plots.residuals_plot()
 
     assert ax.get_xlabel() == "Predicted Values"
     assert ax.get_ylabel() == "Residuals (True - Predicted)"
@@ -125,7 +125,7 @@ def test_residuals_plot(regression_capsule):
 def test_std_residuals_hist(regression_capsule):
     """Test the standardized residuals histogram of RegressionPlots."""
     capsule = regression_capsule
-    ax = capsule.plots.residuals_hist()
+    _, ax = capsule.plots.residuals_hist()
 
     assert ax.get_xlabel() == "Residuals"
     assert ax.get_ylabel() == "Frequency"

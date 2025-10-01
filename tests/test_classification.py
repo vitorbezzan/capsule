@@ -83,7 +83,7 @@ def multiclass_classification_capsule(trained_multiclass_model_data):
 def test_roc_curve_binary(binary_classification_capsule):
     """Test the roc_curve method for binary classification."""
     capsule = binary_classification_capsule
-    ax = capsule.plots.roc_curve()
+    fig, ax = capsule.plots.roc_curve()
 
     assert ax.get_xlabel() == "False Positive Rate"
     assert ax.get_ylabel() == "True Positive Rate"
@@ -107,7 +107,7 @@ def test_roc_curve_binary(binary_classification_capsule):
 def test_roc_curve_multiclass(multiclass_classification_capsule):
     """Test the roc_curve method for multiclass classification."""
     capsule = multiclass_classification_capsule
-    ax = capsule.plots.roc_curve()
+    fig, ax = capsule.plots.roc_curve()
 
     assert ax.get_xlabel() == "False Positive Rate"
     assert ax.get_ylabel() == "True Positive Rate"
@@ -133,7 +133,7 @@ def test_roc_curve_multiclass(multiclass_classification_capsule):
 def test_pr_curve_binary(binary_classification_capsule):
     """Test the pr_curve method for binary classification."""
     capsule = binary_classification_capsule
-    ax = capsule.plots.pr_curve()
+    _, ax = capsule.plots.pr_curve()
 
     assert ax.get_xlabel() == "Recall"
     assert ax.get_ylabel() == "Precision"
@@ -155,7 +155,7 @@ def test_pr_curve_binary(binary_classification_capsule):
 def test_pr_curve_multiclass(multiclass_classification_capsule):
     """Test the pr_curve method for multiclass classification."""
     capsule = multiclass_classification_capsule
-    ax = capsule.plots.pr_curve()
+    _, ax = capsule.plots.pr_curve()
 
     assert ax.get_xlabel() == "Recall"
     assert ax.get_ylabel() == "Precision"

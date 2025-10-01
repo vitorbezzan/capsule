@@ -32,7 +32,7 @@ class ClassificationPlots:
         X: tp.Optional[Input] = None,
         y: tp.Optional[Output] = None,
         **plot_args,
-    ) -> plt.Axes:
+    ) -> tuple[plt.Figure, plt.Axes]:
         """Plot ROC curves for each class in the classification model.
 
         Generates Receiver Operating Characteristic (ROC) curves that show the
@@ -53,7 +53,7 @@ class ClassificationPlots:
             self.capsule.model_.predict_proba(self.capsule.X_test_ if X is None else X)
         )
 
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
         if self.capsule.n_classes_ == 2:
             fpr, tpr, _ = roc_curve(y_true, y_proba[:, 1])
@@ -84,14 +84,14 @@ class ClassificationPlots:
         ax.set_title("Receiver Operating Characteristic")
         ax.legend(loc="lower right")
 
-        return ax
+        return fig, ax
 
     def pr_curve(
         self,
         X: tp.Optional[Input] = None,
         y: tp.Optional[Output] = None,
         **plot_args,
-    ) -> plt.Axes:
+    ) -> tuple[plt.Figure, plt.Axes]:
         """Plot Precision-Recall curves for each class in the classification model.
 
         Generates Precision-Recall (PR) curves that show the trade-off between
@@ -112,7 +112,7 @@ class ClassificationPlots:
             self.capsule.model_.predict_proba(self.capsule.X_test_ if X is None else X)
         )
 
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
         if self.capsule.n_classes_ == 2:
             precision, recall, _ = precision_recall_curve(y_true, y_proba[:, 1])
@@ -152,7 +152,7 @@ class ClassificationPlots:
         ax.set_title("Precision-Recall Curve")
         ax.legend(loc="lower left")
 
-        return ax
+        return fig, ax
 
 
 class ClassificationCapsule(BaseCapsule, ClassifierMixin):

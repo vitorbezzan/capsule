@@ -27,7 +27,7 @@ class RegressionPlots:
         X: tp.Optional[Input] = None,
         y: tp.Optional[Output] = None,
         **scatter_args,
-    ) -> plt.Axes:
+    ) -> tuple[plt.Figure, plt.Axes]:
         """Plot a scatter plot of true vs. predicted values.
 
         Generates scatter plot comparing the true target values to the predicted values
@@ -52,7 +52,7 @@ class RegressionPlots:
             y_true = y_true[:, self.capsule.target_index_]
             y_pred = y_pred[:, self.capsule.target_index_]
 
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
         m = np.min([y_true.min(), y_pred.min()])
         M = np.max([y_true.max(), y_pred.max()])
@@ -63,7 +63,7 @@ class RegressionPlots:
         ax.set_ylabel("Predicted Values")
         ax.legend()
 
-        return ax
+        return fig, ax
 
     def residuals_plot(
         self,
@@ -71,7 +71,7 @@ class RegressionPlots:
         y: tp.Optional[Output] = None,
         n_bins: int | None = None,
         **scatter_args,
-    ) -> plt.Axes:
+    ) -> tuple[plt.Figure, plt.Axes]:
         """Plot a residual plot of residuals vs. predicted values.
 
         Generates a residual plot showing the residuals (true - predicted values)
@@ -101,7 +101,7 @@ class RegressionPlots:
 
         residuals = y_true - y_pred
 
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
 
         ax.scatter(y_pred, residuals, **scatter_args)
         ax.axhline(y=0, color="k", linestyle="--", linewidth=1, label="Reference Line")
@@ -150,7 +150,7 @@ class RegressionPlots:
         ax.set_ylabel("Residuals (True - Predicted)")
         ax.legend()
 
-        return ax
+        return fig, ax
 
     def residuals_hist(
         self,
@@ -159,7 +159,7 @@ class RegressionPlots:
         bins: int | str | None = None,
         standard: bool = False,
         **hist_args,
-    ) -> plt.Axes:
+    ) -> tuple[plt.Figure, plt.Axes]:
         """Plot a histogram of standardized residuals.
 
         Computes standardized residuals from true and predicted values and displays
@@ -201,7 +201,7 @@ class RegressionPlots:
             else:
                 residuals = np.zeros_like(residuals)
 
-        _, ax = plt.subplots()
+        fig, ax = plt.subplots()
         ax.hist(residuals, bins=(bins or 30), **hist_args)
 
         ax.axvline(
@@ -232,7 +232,7 @@ class RegressionPlots:
         ax.set_title("Residuals Histogram")
         ax.legend()
 
-        return ax
+        return fig, ax
 
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):

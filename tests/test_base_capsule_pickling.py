@@ -4,13 +4,13 @@ import os
 import pickle
 from unittest.mock import patch
 
+import nannyml as nml
 import numpy as np
 import pytest
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 
 from capsule import ClassificationCapsule
-import nannyml as nml
 
 
 @pytest.fixture
