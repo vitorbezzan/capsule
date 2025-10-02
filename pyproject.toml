@@ -48,7 +48,7 @@ dev = [
 "Bug Tracker" = "https://github.com/vitorbezzan/capsule"
 
 [project.scripts]
-capsule-cli = "capsule.cli:start_application"
+capsule-cli = "capsule.cli:start_cli"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report html --cov-report term-missing --cov-fail-under 0"

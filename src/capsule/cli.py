@@ -13,7 +13,7 @@ from capsule.mcp_server import start_mcp_server
 
 CLI_VERSION = "202510.01"
 
-app = typer.Typer(name="cli", no_args_is_help=True)
+app = typer.Typer(no_args_is_help=True)
 current_dir = pathlib.Path(os.getcwd()).resolve().absolute()
 logger = logging.getLogger(__name__)
 
@@ -47,13 +47,13 @@ def _version(value: bool) -> None:
 @app.command()
 def startmcp(
     capsule_path: str = typer.Argument(..., help="Path to the capsule file."),
-    name: str = typer.Option("instance", help="Name of the MCP instance."),
+    mcp_server_name: str = typer.Option("instance", help="Name of the MCP instance."),
 ) -> None:
     """Starts MCP server with the given capsule.
 
     Args:
         capsule_path: Path to the capsule file.
-        name: Name to be used internally for the MCP instance, and to be
+        mcp_server_name: Name to be used internally for the MCP instance, and to be
             appended to all tools and actions.
     """
     path = pathlib.Path(capsule_path).resolve().absolute()
@@ -64,7 +64,7 @@ def startmcp(
     with open(path, "rb") as capsule_file:
         capsule = pickle.load(capsule_file)
 
-    start_mcp_server(name, capsule)
+    start_mcp_server(mcp_server_name, capsule)
 
 
 @app.callback()
@@ -90,5 +90,10 @@ def main(
     return
 
 
+def start_cli() -> None:
+    """Starts the CLI."""
+    app()
+
+
 if __name__ == "__main__":
-    app(prog_name="capsule-cli")
+    start_cli()
