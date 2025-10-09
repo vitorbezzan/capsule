@@ -47,13 +47,13 @@ def _version(value: bool) -> None:
 @app.command()
 def startmcp(
     capsule_path: str = typer.Argument(..., help="Path to the capsule file."),
-    mcp_server_name: str = typer.Option("instance", help="Name of the MCP instance."),
+    model_name: str = typer.Option("instance", help="Name of the model instance."),
 ) -> None:
     """Starts MCP server with the given capsule.
 
     Args:
         capsule_path: Path to the capsule file.
-        mcp_server_name: Name to be used internally for the MCP instance, and to be
+        model_name: Name to be used internally for the MCP instance, and to be
             appended to all tools and actions.
     """
     path = pathlib.Path(capsule_path).resolve().absolute()
@@ -64,7 +64,7 @@ def startmcp(
     with open(path, "rb") as capsule_file:
         capsule = pickle.load(capsule_file)
 
-    start_mcp_server(mcp_server_name, capsule)
+    start_mcp_server(model_name, capsule)
 
 
 @app.callback()

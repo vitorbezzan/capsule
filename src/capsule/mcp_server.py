@@ -16,8 +16,6 @@ from capsule.regression import RegressionCapsule
 MCP_VERSION = "202510.01"
 logger = logging.getLogger(__name__)
 
-mcp_server: FastMCP | None = None  # Starts empty
-
 
 def _encode_image(figure: plt.Figure) -> ImageContent:
     """Encodes a matplotlib figure to base64 format."""
@@ -45,34 +43,46 @@ def _load_data(path: str, data_format: str):
 
 
 def start_mcp_server(
-    server_name: str, capsule: RegressionCapsule | ClassificationCapsule
+    model_name: str, capsule: RegressionCapsule | ClassificationCapsule
 ) -> None:
     """Starts MCP server with the given capsule."""
     logger.info("Starting MCP server...")
-    mcp_server = FastMCP(server_name)
+    mcp = FastMCP(model_name)
 
     # Tools for both classification and regression
-    @mcp_server.tool()
-    async def get_predictions_for_file(path: str, format: str = "parquet") -> str:
-        """Loads data from path and returns predictions in .csv format as string.
+    @mcp.tool(
+        description=f"Get predictions for a local file and save to a local path for "
+        f"{model_name} model.",
+    )
+    async def get_predictions_for_file(
+        in_path: str, in_format: str, out_path: str
+    ) -> str:
+        """Loads local data from in_path, calculates predictions, and saves them to
+            a local out_path. Outputs a review and summary of the predictions.
 
         Args:
-            path: Path of file to load
-            format: Format of the data file. Supported formats are 'parquet', 'csv', and
-                'numpy'.
+            in_path: Path of file to load in local machine.
+            in_format: Format of the data file. Supported formats are 'parquet', 'csv',
+                and 'numpy'.
+            out_path: Path to save the predictions in local machine.
         """
-        buffer = io.BytesIO()
-        data = _load_data(path, format)
+        predictions = pd.DataFrame(capsule.predict(_load_data(in_path, in_format)))
+        predictions.to_csv(out_path, index=True)
 
-        pd.DataFrame(capsule.predict(data)).to_csv(buffer, index=True)
-        return buffer.getvalue().decode("utf-8")
+        return (
+            f"Made {len(predictions)} predictions, with shape {predictions.shape} "
+            f"and saved to {out_path}."
+        )
 
     if isinstance(capsule, RegressionCapsule):
 
-        @mcp_server.tool()
-        async def generate_scatter_plot_predictions() -> ImageContent:
-            """Plots the scatter plot for regression predictions compared to true values
-            in the test set.
+        @mcp.tool(
+            description=f"Get scatter plot of true vs predicted values on the test set "
+            f"for {model_name} regression model.",
+        )
+        async def get_test_scatterplot() -> ImageContent:
+            """Outputs the scatter plot of true vs predicted values on the test set for
+                regression capsules.
 
             Returns:
                 str: Encoded image in base64 format.
@@ -80,24 +90,60 @@ def start_mcp_server(
             fig, _ = capsule.plots.scatter()
             return _encode_image(fig)
 
+        @mcp.tool(
+            description=f"Get residuals plot of true vs predicted values on the test "
+            f"set for {model_name} regression model.",
+        )
+        async def get_test_residuals_plot() -> ImageContent:
+            """Outputs the residuals plot of true vs predicted values on the test set
+                for regression capsules.
+
+            Returns:
+                str: Encoded image in base64 format.
+            """
+            fig, _ = capsule.plots.residuals_plot()
+            return _encode_image(fig)
+
+        @mcp.tool(
+            description=f"Get residuals histogram plot of true vs predicted values on "
+            f"the test set for {model_name} regression model.",
+        )
+        async def get_test_hist_residuals_plot() -> ImageContent:
+            """Outputs the histogram residuals plot of true vs predicted values on the
+                test set for regression capsules.
+
+            Returns:
+                str: Encoded image in base64 format.
+            """
+            fig, _ = capsule.plots.residuals_hist()
+            return _encode_image(fig)
+
     if isinstance(capsule, ClassificationCapsule):
 
-        @mcp_server.tool()
-        async def get_predict_proba_for_file(path: str, format: str = "parquet") -> str:
-            """Loads data from path and returns predict_proba in .csv format as string.
+        @mcp.tool()
+        async def get_proba_for_file(
+            in_path: str, in_format: str, out_path: str
+        ) -> str:
+            """Loads local data from in_path, calculates probabilities, and saves them
+                to a local out_path. Outputs a review and summary of the predictions.
 
             Args:
-                path: Path of file to load
-                format: Format of the data file. Supported formats are 'parquet', 'csv', and
-                    'numpy'.
+                in_path: Path of file to load in local machine.
+                in_format: Format of the data file. Supported formats are 'parquet',
+                    'csv', and 'numpy'.
+                out_path: Path to save the predictions in local machine.
             """
-            buffer = io.BytesIO()
-            data = _load_data(path, format)
+            predictions = pd.DataFrame(
+                capsule.predict_proba(_load_data(in_path, in_format))
+            )
+            predictions.to_csv(out_path, index=True)
 
-            pd.DataFrame(capsule.predict_proba(data)).to_csv(buffer, index=True)
-            return buffer.getvalue().decode("utf-8")
+            return (
+                f"Made {len(predictions)} predictions, with shape {predictions.shape} "
+                f"and saved to {out_path}."
+            )
 
     else:
         pass
 
-    mcp_server.run(transport="stdio")
+    mcp.run(transport="stdio")
