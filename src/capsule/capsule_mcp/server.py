@@ -1,4 +1,4 @@
-"""Main MCP definitions for Capsule."""
+"""Main MCP server definitions for Capsule."""
 
 import io
 import logging

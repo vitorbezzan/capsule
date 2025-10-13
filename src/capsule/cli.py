@@ -9,7 +9,7 @@ import typing as tp
 import typer
 from dotenv import load_dotenv
 
-from capsule.mcp_server import start_mcp_server
+from capsule.capsule_mcp.server import start_mcp_server
 
 CLI_VERSION = "202510.01"
 
