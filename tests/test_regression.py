@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import pytest
+import pickle
 from sklearn.datasets import load_diabetes, make_regression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
