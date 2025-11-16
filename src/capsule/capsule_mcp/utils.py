@@ -26,6 +26,9 @@ def encode_image(figure: plt.Figure) -> ImageContent:
     return Image(data=buffer.getvalue(), format="png").to_image_content()
 
 
+def _load_format(path: str, data_format: str) -> Any:
+
+
 def load_dataframe(path: str, data_format: str) -> Any:
     """Loads data from the given path and format.
 
