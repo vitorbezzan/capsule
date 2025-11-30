@@ -5,8 +5,8 @@ import typing as tp
 import nannyml as nml
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from nannyml.base import Result
+from matplotlib import pyplot as plt
 from pydantic import validate_call
 from sklearn.base import ClassifierMixin
 from sklearn.metrics import (
@@ -205,9 +205,12 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         reference_data = self.format_data(self.X_test_, self.y_test_)
 
         is_multiclass = self.n_classes_ > 2
-        problem_type = (
+
+        self.problem_type = (
             "classification_multiclass" if is_multiclass else "classification_binary"
         )
+        self.metrics = ["f1", "roc_auc", "precision", "recall"]
+
         y_pred_proba = (
             {i: f"CBPE_class_{i}" for i in range(self.n_classes_)}
             if is_multiclass
@@ -218,17 +221,17 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         )
 
         self.estimator_ = nml.CBPE(
-            problem_type=problem_type,
+            problem_type=self.problem_type,
             y_pred_proba=y_pred_proba,
             y_pred="CBPE_prediction",
             y_true="CBPE_target",
             timestamp_column_name=timestamp_col,
-            metrics=["f1", "roc_auc", "precision", "recall"],
+            metrics=self.metrics,
             **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
         self.estimator_.fit(reference_data)
 
-        self.fit_univariate_drift(
+        self.fit_drift_performance(
             X_test,
             **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
@@ -245,22 +248,8 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         """
         return self.model_.predict_proba(X)
 
-    def get_metrics(self, X: Input) -> Result:
-        """Estimate classification performance metrics using CBPE.
-
-        Uses the fitted CBPE estimator to estimate performance metrics
-        (F1, ROC-AUC, precision, recall) on the provided analysis data
-        without requiring true target values.
-
-        Args:
-            X: Analysis input data for performance estimation.
-
-        Returns:
-            DataFrame containing estimated performance metrics over time.
-
-        Raises:
-            ValueError: If timestamp column is required but missing from data.
-        """
+    def _get_metrics_result(self, X: Input) -> Result:
+        """Internal function to return the full set of metrics."""
         analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (
@@ -270,8 +259,41 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
                 "Timestamp column 'CBPE_timestamp' is required for analysis."
             )
 
-        estimation = self.estimator_.estimate(analysis_data)
-        return estimation.filter(period="analysis").to_df()
+        return self.estimator_.estimate(analysis_data)
+
+    def get_metrics(
+        self,
+        X: Input,
+        metric: str = "f1",
+    ) -> pd.DataFrame:
+        """Estimate classification performance metrics using CBPE.
+
+        Uses the fitted CBPE estimator to estimate performance metrics
+        (F1, ROC-AUC, precision, recall) on the provided analysis data
+        without requiring true target values.
+
+        Args:
+            X: Analysis input data for performance estimation.
+            metric: Metric to use. In classification, this can be "f1", "roc_auc",
+                "precision", or "recall". Default is "f1".
+
+        Returns:
+            DataFrame containing estimated performance metrics over time.
+
+        Raises:
+            ValueError: If timestamp column is required but missing from data.
+        """
+        df = (
+            self._get_metrics_result(X)
+            .filter(
+                period="analysis",
+                metrics=[metric],
+            )
+            .to_df()
+        )
+
+        df.columns = df.columns.droplevel()
+        return df
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:

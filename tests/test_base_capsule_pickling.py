@@ -4,13 +4,13 @@ import os
 import pickle
 from unittest.mock import patch
 
+import nannyml as nml
 import numpy as np
 import pytest
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 
 from capsule import ClassificationCapsule
-import nannyml as nml
 
 
 @pytest.fixture
@@ -45,7 +45,7 @@ def capsule_instance(trained_model_and_data):
 
 def _assert_drift_is_set(capsule):
     """Call fit_univariate_drift and check drift_ is set and correct type"""
-    capsule.fit_univariate_drift(capsule.X_test_)
+    capsule.fit_drift_performance(capsule.X_test_)
     assert hasattr(capsule, "drift_")
     assert isinstance(capsule.drift_, nml.UnivariateDriftCalculator)
 

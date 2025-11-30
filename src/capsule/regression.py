@@ -6,7 +6,7 @@ import nannyml as nml
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from nannyml._typing import Result
+from nannyml.base import Result
 from pydantic import NonNegativeInt, validate_call
 from scipy.interpolate import UnivariateSpline
 from sklearn.base import RegressorMixin
@@ -290,6 +290,9 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
                 "to indicate which target variable to monitor."
             )
 
+        self.problem_type = "regression"
+        self.metrics = ["mae", "mape", "mse", "rmse"]
+
         reference_data = self.format_data(self.X_test_, self.y_test_)
 
         timestamp_col = (
@@ -303,31 +306,17 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
             y_pred="DLE_prediction",
             y_true="DLE_target",
             timestamp_column_name=timestamp_col,
-            metrics=["mae", "mape", "mse", "rmse"],
+            metrics=self.metrics,
             **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
         self.estimator_.fit(reference_data)
-        self.fit_univariate_drift(
+        self.fit_drift_performance(
             X_test,
             **{k: v for k, v in chunk_args.items() if k in chunker_args},
         )
 
-    def get_metrics(self, X: Input) -> Result:
-        """Estimate regression performance metrics using DLE.
-
-        Uses the fitted DLE estimator to estimate performance metrics
-        (MAE, MAPE, MSE, RMSE) on the provided analysis data without
-        requiring true target values.
-
-        Args:
-            X: Analysis input data for performance estimation.
-
-        Returns:
-            DataFrame containing estimated performance metrics over time.
-
-        Raises:
-            ValueError: If timestamp column is required but missing from data.
-        """
+    def _get_metrics_result(self, X: Input) -> Result:
+        """Internal function to return the full set of metrics."""
         analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (
@@ -337,8 +326,41 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
                 "Timestamp column 'DLE_timestamp' is required for analysis."
             )
 
-        estimation = self.estimator_.estimate(analysis_data)
-        return estimation.filter(period="analysis").to_df()
+        return self.estimator_.estimate(analysis_data)
+
+    def get_metrics(
+        self,
+        X: Input,
+        metric: str = "mape",
+    ) -> Result | pd.DataFrame:
+        """Estimate regression performance metrics using DLE.
+
+        Uses the fitted DLE estimator to estimate performance metrics
+        (MAE, MAPE, MSE, RMSE) on the provided analysis data without
+        requiring true target values.
+
+        Args:
+            X: Analysis input data for performance estimation.
+            metric: Metric to use. In regression, this can be "mae", "mape",
+                "mse", or "rmse". Default is "mape".
+
+        Returns:
+            DataFrame containing estimated performance metrics over time.
+
+        Raises:
+            ValueError: If timestamp column is required but missing from data.
+        """
+        df = (
+            self._get_metrics_result(X)
+            .filter(
+                period="analysis",
+                metrics=[metric],
+            )
+            .to_df()
+        )
+
+        df.columns = df.columns.droplevel()
+        return df
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:

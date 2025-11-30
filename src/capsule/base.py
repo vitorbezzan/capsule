@@ -5,9 +5,9 @@ import pickle
 import typing as tp
 from abc import ABC, abstractmethod
 
+import nannyml as nml
 import numpy as np
 import pandas as pd
-import nannyml as nml
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from nannyml.base import Result
 from numpy.typing import NDArray
@@ -90,7 +90,11 @@ class BaseCapsule(ABC, BaseEstimator):
         be fitted after creation.
     """
 
+    problem_type: str
+    metrics: str
+
     drift_: nml.UnivariateDriftCalculator
+    performance_: nml.PerformanceCalculator
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
@@ -107,7 +111,9 @@ class BaseCapsule(ABC, BaseEstimator):
             X_test: Test input data used for reference during performance estimation.
             y_test: Test target data corresponding to X_test.
             **chunk_args: Additional keyword arguments to pass to the univariate drift
-                detector.
+                detector chunker. See
+                https://nannyml.readthedocs.io/en/stable/tutorials/chunking.html
+                documentation for details.
 
         Raises:
             ValidationError: If the input data fails validation checks.
@@ -211,7 +217,11 @@ class BaseCapsule(ABC, BaseEstimator):
         return self.model_.predict(X)
 
     @abstractmethod
-    def get_metrics(self, X: Input) -> Result:
+    def get_metrics(
+        self,
+        X: Input,
+        metric: str,
+    ) -> Result | pd.DataFrame:
         """Estimate performance metrics on analysis data.
 
         This abstract method must be implemented by subclasses to provide
@@ -219,6 +229,8 @@ class BaseCapsule(ABC, BaseEstimator):
 
         Args:
             X: Analysis data for performance estimation.
+            metric: Metric to use. In classification, this can be 'f1', 'roc_auc',
+                'precision', or 'recall'.
 
         Returns:
             Performance estimation results.
@@ -240,16 +252,19 @@ class BaseCapsule(ABC, BaseEstimator):
         raise NotImplementedError("Must be implemented in subclasses.")
 
     def fit_univariate_drift(self, X: Input, **chunk_args) -> None:
-        """Fit univariate drift detector on reference data.
+        """Fits univariate drift detector and performance tracker on reference data.
 
         Args:
-            X: Reference input data for fitting the drift detector.
+            X: Reference input data for fitting the drift detector and performance
+                tracker.
+            problem_type: Type of machine learning problem.
             **chunk_args: Additional keyword arguments to pass to the univariate drift
                 detector.
         """
         df = self.format_data(X)
         df = df[[c for c in df.columns if c.startswith("_")]]
 
+        # Fits drift detection engine
         self.drift_ = nml.UnivariateDriftCalculator(
             column_names=[c for c in df.columns if c.startswith("_")],
             treat_as_categorical=df.select_dtypes(
