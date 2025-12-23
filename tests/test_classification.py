@@ -6,7 +6,7 @@ from sklearn.datasets import load_breast_cancer, load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from capsule import ClassificationCapsule
+from capsule.classification import ClassificationCapsule
 
 
 @pytest.fixture
@@ -45,9 +45,9 @@ def test_multiclass(trained_multiclass_model_data):
     capsule = ClassificationCapsule(model=model, X_test=X_test, y_test=y_test)
 
     assert capsule.n_classes_ == 3
-    assert not capsule.get_metrics(X_test).empty
+    assert not capsule.metrics(X_test).empty
 
-    drift_df = capsule.get_univariate_drift(X_test)
+    drift_df = capsule.univariate_drift(X_test)
     assert drift_df is not None
     assert not drift_df.empty
 
@@ -58,10 +58,10 @@ def test_binary(trained_binary_model_data):
     capsule = ClassificationCapsule(model=model, X_test=X_test, y_test=y_test)
 
     assert capsule.n_classes_ == 2
-    assert not capsule.get_metrics(X_test).empty
+    assert not capsule.metrics(X_test).empty
 
-    capsule.fit_drift_performance(X_test)
-    drift_df = capsule.get_univariate_drift(X_test)
+    capsule._fit(X_test)
+    drift_df = capsule.univariate_drift(X_test)
     assert drift_df is not None
     assert not drift_df.empty
 

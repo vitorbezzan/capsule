@@ -4,7 +4,7 @@
 [![python](https://img.shields.io/badge/python-3.13-blue?style=for-the-badge)](http://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-**Capsule** is a production-ready Python library that gives machine learning models superpowers in production environments. It provides immutable model wrappers with built-in drift detection, performance monitoring, secure serialization, and visualization capabilities for both classification and regression tasks.
+**Capsule** is a production-ready Python library that gives machine learning models superpowers in production environments. It provides immutable model wrappers with built-in drift detection, performance monitoring and visualization capabilities for both classification and regression tasks.
 
 Unlike traditional ML libraries that focus on training, Capsule specializes in production deployment concerns—wrapping your trained models with enterprise-grade monitoring and security features while maintaining a clean, unified API.
 
@@ -23,7 +23,8 @@ Unlike traditional ML libraries that focus on training, Capsule specializes in p
 ## 🚀 Quick Start
 
 ```python
-from capsule import ClassificationCapsule, RegressionCapsule
+from capsule.classification import ClassificationCapsule
+from capsule.regression import RegressionCapsule
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 

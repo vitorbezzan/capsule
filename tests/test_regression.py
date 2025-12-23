@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 
-from capsule import RegressionCapsule
+from capsule.regression import RegressionCapsule
 
 
 @pytest.fixture
@@ -64,9 +64,9 @@ def test_single_target_diabetes(trained_single_target_model_data):
     capsule = RegressionCapsule(model=model, X_test=X_test, y_test=y_test)
 
     assert capsule.n_targets_ == 1
-    assert not capsule.get_metrics(X_test).empty
+    assert not capsule.metrics(X_test).empty
 
-    drift_df = capsule.get_univariate_drift(X_test)
+    drift_df = capsule.univariate_drift(X_test)
     assert drift_df is not None
     assert not drift_df.empty
 
@@ -83,16 +83,16 @@ def test_multi_target_diabetes(trained_multi_target_model_data):
     )
 
     assert capsule0.n_targets_ == 2
-    assert not capsule0.get_metrics(X_test).empty
+    assert not capsule0.metrics(X_test).empty
 
-    drift_df0 = capsule0.get_univariate_drift(X_test)
+    drift_df0 = capsule0.univariate_drift(X_test)
     assert drift_df0 is not None
     assert not drift_df0.empty
 
     assert capsule1.n_targets_ == 2
-    assert not capsule1.get_metrics(X_test).empty
+    assert not capsule1.metrics(X_test).empty
 
-    drift_df1 = capsule1.get_univariate_drift(X_test)
+    drift_df1 = capsule1.univariate_drift(X_test)
     assert drift_df1 is not None
     assert not drift_df1.empty
 

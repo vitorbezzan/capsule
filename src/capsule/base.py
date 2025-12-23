@@ -1,15 +1,11 @@
 """Base classes for the capsule package."""
 
-import os
-import pickle
 import typing as tp
 from abc import ABC, abstractmethod
 
 import nannyml as nml
 import numpy as np
 import pandas as pd
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from nannyml.base import Result
 from numpy.typing import NDArray
 from pydantic import validate_call
 from sklearn.base import BaseEstimator
@@ -90,11 +86,13 @@ class BaseCapsule(ABC, BaseEstimator):
         be fitted after creation.
     """
 
-    problem_type: str
-    metrics: str
+    drift_calculator_: nml.UnivariateDriftCalculator
+    performance_calculator_: nml.PerformanceCalculator
 
-    drift_: nml.UnivariateDriftCalculator
-    performance_: nml.PerformanceCalculator
+    n_targets_: int
+    n_classes_: int
+    n_features_: int
+    target_index_: int | None
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def __init__(
@@ -129,62 +127,14 @@ class BaseCapsule(ABC, BaseEstimator):
             y_numeric=True,
         )
 
+        self.model_ = model
         self.X_test_ = X_test
         self.y_test_ = y_test
 
-        self.model_ = model
         self.n_features_ = X_test.shape[1]
         self.n_targets_ = 1 if y_test.ndim == 1 else y_test.shape[1]
 
-    def __getstate__(self) -> dict:
-        """Prepare capsule state for serialization with optional encryption.
-
-        If the CAPSULE_KEY environment variable is set, the capsule state
-        will be encrypted using AES-GCM encryption before serialization.
-
-        Returns:
-            Dictionary containing serialized (and possibly encrypted) state.
-        """
-        if os.getenv("CAPSULE_KEY", None) is not None:
-            nonce = os.urandom(12)
-            encrypted = AESGCM(os.environ["CAPSULE_KEY"].encode()).encrypt(
-                nonce,
-                pickle.dumps(self.__dict__),
-                None,
-            )
-
-            return {"nonce": nonce, "data": encrypted}
-
-        return {"data": pickle.dumps(self.__dict__)}
-
-    def __setstate__(self, state: dict) -> None:
-        """Restore capsule state from serialized data with optional decryption.
-
-        If the state contains encrypted data (indicated by presence of 'nonce'),
-        it will be decrypted using the CAPSULE_KEY environment variable.
-
-        Args:
-            state: Dictionary containing serialized state data.
-
-        Raises:
-            RuntimeError: If encrypted data is found but CAPSULE_KEY is not set.
-        """
-        data = state["data"]
-
-        if "nonce" in state:
-            key = os.getenv("CAPSULE_KEY", None)
-            if key is None:
-                raise RuntimeError(
-                    "CAPSULE_KEY not set. Cannot unpickle encrypted capsule.",
-                )
-
-            data = AESGCM(key.encode()).decrypt(state["nonce"], data, None)
-
-        self.__dict__ = pickle.loads(data)
-
-    def fit(
-        self, X: Input, y: tp.Optional[Output] = None, **fit_params: dict
-    ) -> "BaseCapsule":
+    def fit(self, X: Input, y: Output, **fit_params: dict) -> "BaseCapsule":
         """Attempt to fit the capsule.
 
         Capsules wrap pre-trained models and cannot be fitted. This method
@@ -216,12 +166,28 @@ class BaseCapsule(ABC, BaseEstimator):
         """
         return self.model_.predict(X)
 
+    @validate_call(config={"arbitrary_types_allowed": True})
+    def univariate_drift(self, X: Input):
+        """Estimate univariate drift on analysis data.
+
+        Args:
+            X: Analysis input data for drift estimation.
+
+        Returns:
+            Univariate drift estimation results.
+        """
+        df = self.format_data(X)
+        df = df[[c for c in df.columns if c.startswith("_")]]
+
+        return self.drift_calculator_.calculate(df).filter(period="analysis").to_df()
+
     @abstractmethod
-    def get_metrics(
-        self,
-        X: Input,
-        metric: str,
-    ) -> Result | pd.DataFrame:
+    def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
+        """Formats data to be used in metrics calculations and plots."""
+        raise NotImplementedError("Must be implemented in subclasses.")
+
+    @abstractmethod
+    def metrics(self, X: Input, metric: str) -> pd.DataFrame:
         """Estimate performance metrics on analysis data.
 
         This abstract method must be implemented by subclasses to provide
@@ -246,26 +212,20 @@ class BaseCapsule(ABC, BaseEstimator):
         """Get plots for the capsule."""
         raise NotImplementedError("Must be implemented in subclasses.")
 
-    @abstractmethod
-    def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
-        """Formats data to be used in metrics calculations and plots."""
-        raise NotImplementedError("Must be implemented in subclasses.")
-
-    def fit_univariate_drift(self, X: Input, **chunk_args) -> None:
+    @validate_call(config={"arbitrary_types_allowed": True})
+    def _fit(self, X: Input, **chunk_args) -> None:
         """Fits univariate drift detector and performance tracker on reference data.
 
         Args:
             X: Reference input data for fitting the drift detector and performance
                 tracker.
-            problem_type: Type of machine learning problem.
             **chunk_args: Additional keyword arguments to pass to the univariate drift
                 detector.
         """
         df = self.format_data(X)
         df = df[[c for c in df.columns if c.startswith("_")]]
 
-        # Fits drift detection engine
-        self.drift_ = nml.UnivariateDriftCalculator(
+        self.drift_calculator_ = nml.UnivariateDriftCalculator(
             column_names=[c for c in df.columns if c.startswith("_")],
             treat_as_categorical=df.select_dtypes(
                 include=["category", "object"]
@@ -277,18 +237,5 @@ class BaseCapsule(ABC, BaseEstimator):
             categorical_methods=["chi2", "jensen_shannon"],
             **chunk_args,
         )
-        self.drift_.fit(df)
 
-    def get_univariate_drift(self, X: Input):
-        """Estimate univariate drift on analysis data.
-
-        Args:
-            X: Analysis input data for drift estimation.
-
-        Returns:
-            Univariate drift estimation results.
-        """
-        df = self.format_data(X)
-        df = df[[c for c in df.columns if c.startswith("_")]]
-
-        return self.drift_.calculate(df).filter(period="analysis").to_df()
+        self.drift_calculator_.fit(df)
