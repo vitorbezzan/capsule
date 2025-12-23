@@ -1,3 +1,3 @@
 """**API entrypoint for the package.**"""
 
-__version__ = "202509.03"
+__version__ = "2025012.01"

@@ -1,4 +1,9 @@
-"""Capsules for regression tasks."""
+"""Capsules for regression tasks.
+
+This module provides the RegressionCapsule class, which wraps regression models
+and offers performance monitoring, drift detection, and plotting utilities using
+the nannyml library.
+"""
 
 import typing as tp
 
@@ -13,14 +18,10 @@ from capsule.regression_plots import RegressionPlots
 
 
 class RegressionCapsule(BaseCapsule, RegressorMixin):
-    """Capsule implementation for regression tasks.
+    """Capsule for regression tasks.
 
-    This class wraps regression models and provides performance estimation
-    using Direct Loss Estimation (DLE) from the nannyml library. It supports
-    both single and multi-target regression scenarios.
-
-    Attributes:
-        model_: The wrapped regression model implementing ImplementsPredict.
+    Wraps a regression model and provides DLE-based performance monitoring,
+    univariate drift detection, and plotting utilities.
     """
 
     model_: ImplementsPredict
@@ -34,24 +35,18 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         target_index: tp.Optional[NonNegativeInt] = None,
         **chunk_args,
     ) -> None:
-        """Initialize the regression capsule with DLE estimator.
-
-        Sets up the regression capsule with a Direct Loss Estimation (DLE)
-        estimator for performance monitoring. The DLE estimator is fitted
-        on the provided test data to serve as reference data.
+        """Build a regression capsule with DLE reference data.
 
         Args:
-            model: A trained regression model implementing predict method.
-            X_test: Test input data for reference.
-            y_test: Test target data for reference.
-            target_index: Index of target variable for multi-target regression.
-                If None, assumes single-target regression.
-            **chunk_args: Additional keyword arguments passed to DLE estimator,
-                to be filtered to exclude reserved parameter names.
+            model: Trained regressor implementing ``predict``.
+            X_test: Reference feature data used to fit monitoring components.
+            y_test: Reference targets aligned with ``X_test``.
+            target_index: For multi-target regressors, which target to monitor.
+            **chunk_args: Chunking kwargs forwarded to DLE and drift calculators
+                (e.g., ``chunk_size``, ``chunk_period``).
 
-        Note:
-            Multi-target regression requires specifying target_index to
-            indicate which target variable to monitor.
+        Raises:
+            ValueError: When multi-target data is provided without ``target_index``.
         """
         super().__init__(
             model,
@@ -93,26 +88,13 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
-        """Generate properly formatted DataFrame for DLE analysis.
+        """Format data for DLE estimation.
 
-        Creates a DataFrame with the structure required by the DLE estimator,
-        including feature columns, predictions, and optionally target values.
-        Automatically handles datetime indexing for time-series data.
-
-        Args:
-            X: Input data to format.
-            y: Target data to include (optional). If provided, adds target
-                column to the DataFrame.
-
-        Returns:
-            DataFrame formatted for DLE with columns:
-                - DLE_f_0, DLE_f_1, ...: Feature columns
-                - DLE_prediction: Model predictions
-                - DLE_target: Target values (if y provided)
-                - DLE_timestamp: Timestamp column (if datetime index)
+        Returns a DataFrame with features, predictions, optional targets, and
+        optional timestamps when the input index is a ``DatetimeIndex``.
 
         Raises:
-            ValueError: If input data doesn't have expected number of features.
+            ValueError: If the input feature count differs from the reference.
         """
         if X.shape[1] != self.n_features_:
             raise ValueError(
@@ -153,22 +135,17 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
         X: Input,
         metric: str = "mape",
     ) -> pd.DataFrame:
-        """Estimate regression performance metrics using DLE.
-
-        Uses the fitted DLE estimator to estimate performance metrics
-        (MAE, MAPE, MSE, RMSE) on the provided analysis data without
-        requiring true target values.
+        """Estimate regression performance via DLE.
 
         Args:
-            X: Analysis input data for performance estimation.
-            metric: Metric to use. In regression, this can be "mae", "mape",
-                "mse", or "rmse". Default is "mape".
+            X: Analysis features.
+            metric: One of ``mae``, ``mape``, ``mse``, ``rmse``.
 
         Returns:
-            DataFrame containing estimated performance metrics over time.
+            DataFrame of estimated performance over analysis chunks.
 
         Raises:
-            ValueError: If timestamp column is required but missing from data.
+            ValueError: If a timestamp column is required but missing.
         """
         df = (
             self._get_metrics_result(X)
@@ -184,18 +161,11 @@ class RegressionCapsule(BaseCapsule, RegressorMixin):
 
     @property
     def plots(self) -> RegressionPlots:
-        """Access regression-specific plotting methods.
-
-        Provides access to plotting utilities tailored for regression analysis,
-        such as scatter plots comparing true vs. predicted values.
-
-        Returns:
-            An instance of RegressionPlots for generating regression plots.
-        """
+        """Regression plotting helpers (scatter, residuals)."""
         return RegressionPlots(self)
 
     def _get_metrics_result(self, X: Input) -> Result:
-        """Internal function to return the full set of metrics."""
+        """Return the raw DLE result object for downstream use."""
         analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (

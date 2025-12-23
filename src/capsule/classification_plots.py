@@ -1,4 +1,10 @@
-"""Classification plots for Capsule classifier models."""
+"""Classification plots for Capsule classifier models.
+
+This module provides the `ClassificationPlots` class, which contains methods to plot
+Receiver Operating Characteristic (ROC) curves and Precision-Recall (PR) curves for
+classification tasks. These plots are useful for evaluating the performance of
+classification models, especially in binary and multiclass settings.
+"""
 
 import typing as tp
 
@@ -15,7 +21,7 @@ from capsule.base import BaseCapsule, Input, Output
 
 
 class ClassificationPlots:
-    """Plots class for classification tasks."""
+    """Plots for classification tasks (ROC and PR curves)."""
 
     def __init__(self, capsule: BaseCapsule) -> None:
         """Initialize the ClassificationPlots with a ClassificationCapsule instance."""
@@ -27,12 +33,9 @@ class ClassificationPlots:
         y: tp.Optional[Output] = None,
         **plot_args,
     ) -> plt.Axes:
-        """Plot ROC curves for each class in the classification model.
+        """Plot ROC curves for each class.
 
-        Generates Receiver Operating Characteristic (ROC) curves that show the
-        performance of the classifier at different classification thresholds. For
-        binary classification, a single curve is drawn. For multiclass problems,
-        one curve per class is drawn using a one-vs-rest approach.
+        Uses the capsule's stored test data when inputs are omitted.
 
         Args:
             X: Input data for prediction (optional). If None, uses the test input data.
@@ -86,12 +89,9 @@ class ClassificationPlots:
         y: tp.Optional[Output] = None,
         **plot_args,
     ) -> plt.Axes:
-        """Plot Precision-Recall curves for each class in the classification model.
+        """Plot Precision-Recall curves for each class.
 
-        Generates Precision-Recall (PR) curves that show the trade-off between
-        precision and recall for different threshold values. For binary classification,
-        a single curve is drawn. For multiclass problems, one curve per class is drawn
-        using a one-vs-rest approach.
+        Uses the capsule's stored test data when inputs are omitted.
 
         Args:
             X: Input data for prediction (optional). If None, uses the test input data.

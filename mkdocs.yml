@@ -3,8 +3,8 @@ nav:
   - Home: index.md
   - API:
       - Base: api_base.md
-      - ClassifierCV: api_classification.md
-      - RegressionCV: api_regression.md
+      - Classification: api_classification.md
+      - Regression: api_regression.md
   - License: license.md
 
 theme:

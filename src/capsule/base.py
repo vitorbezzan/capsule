@@ -78,7 +78,7 @@ class BaseCapsule(ABC, BaseEstimator):
 
     This class provides the common interface and functionality for both
     regression and classification capsules. It handles model wrapping,
-    serialization with optional encryption, and defines the basic contract
+    drift detection, performance monitoring, and defines the basic contract
     that all capsules must follow.
 
     Note:
@@ -174,7 +174,8 @@ class BaseCapsule(ABC, BaseEstimator):
             X: Analysis input data for drift estimation.
 
         Returns:
-            Univariate drift estimation results.
+            Univariate drift estimation results for the analysis period as a
+            pandas DataFrame.
         """
         df = self.format_data(X)
         df = df[[c for c in df.columns if c.startswith("_")]]
@@ -214,13 +215,12 @@ class BaseCapsule(ABC, BaseEstimator):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def _fit(self, X: Input, **chunk_args) -> None:
-        """Fits univariate drift detector and performance tracker on reference data.
+        """Fit univariate drift detector and performance tracker on reference data.
 
         Args:
-            X: Reference input data for fitting the drift detector and performance
-                tracker.
-            **chunk_args: Additional keyword arguments to pass to the univariate drift
-                detector.
+            X: Reference input data used to fit drift and performance estimators.
+            **chunk_args: Additional keyword arguments forwarded to the drift
+                detector chunker.
         """
         df = self.format_data(X)
         df = df[[c for c in df.columns if c.startswith("_")]]

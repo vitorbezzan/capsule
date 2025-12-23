@@ -1,4 +1,26 @@
-"""Regression plots for Capsule regression models."""
+"""Regression plots for Capsule regression models.
+
+This module provides the RegressionPlots class, which offers methods to create
+various plots (scatter plots, residuals plots, and histograms) for analyzing
+regression model performance. The plots help in visualizing the relationship
+between true and predicted values, understanding residuals behavior, and
+assessing the distribution of residuals.
+
+Usage:
+    from capsule.regression_plots import RegressionPlots
+
+    # Assuming 'capsule' is an instance of a RegressionCapsule
+    plots = RegressionPlots(capsule)
+
+    # Scatter plot of true vs. predicted values
+    plots.scatter()
+
+    # Residuals plot with smoothed trend line
+    plots.residuals_plot()
+
+    # Histogram of residuals
+    plots.residuals_hist()
+"""
 
 import typing as tp
 
@@ -11,7 +33,7 @@ from capsule.base import BaseCapsule, Input, Output
 
 
 class RegressionPlots:
-    """Plots class for regression tasks."""
+    """Plots for regression tasks (scatter, residuals, histograms)."""
 
     def __init__(self, capsule: BaseCapsule) -> None:
         """Initialize the RegressionPlot with a RegressionCapsule instance."""
@@ -23,20 +45,9 @@ class RegressionPlots:
         y: tp.Optional[Output] = None,
         **scatter_args,
     ) -> plt.Axes:
-        """Plot a scatter plot of true vs. predicted values.
+        """Scatter plot of true vs. predicted values.
 
-        Generates scatter plot comparing the true target values to the predicted values
-        for regression analysis. If no input data is provided, uses the test data stored
-        in the capsule. Optionally accepts additional keyword arguments for customizing
-        the scatter plot.
-
-        Args:
-            X: Input data for prediction (optional). If None, uses the test input data.
-            y: True target values (optional). If None, uses the test target data.
-            **scatter_args: Additional keyword arguments passed to matplotlib's scatter.
-
-        Returns:
-            The matplotlib Axes object containing the scatter plot.
+        Uses the capsule's stored test data when inputs are omitted.
         """
         y_true = np.array(self.capsule.y_test_ if y is None else y)
         predictions = np.array(
@@ -67,24 +78,7 @@ class RegressionPlots:
         n_bins: int | None = None,
         **scatter_args,
     ) -> plt.Axes:
-        """Plot a residual plot of residuals vs. predicted values.
-
-        Generates a residual plot showing the residuals (true - predicted values)
-        against the predicted values for regression analysis. This plot is useful
-        for diagnosing model performance and identifying patterns in prediction errors.
-        If no input data is provided, uses the test data stored in the capsule.
-        Optionally accepts additional keyword arguments for customizing the scatter plot.
-
-        Args:
-            X: Input data for prediction (optional). If None, uses the test input data.
-            y: True target values (optional). If None, uses the test target data.
-            n_bins: Number of bins to use for smoothing the residual trend line.
-                If None, defaults to min(50, len(data) // 10).
-            **scatter_args: Additional keyword arguments passed to matplotlib's scatter.
-
-        Returns:
-            The matplotlib Axes object containing the residual plot.
-        """
+        """Residuals vs. predictions plot with optional smoothed trend."""
         y_true = np.array(self.capsule.y_test_ if y is None else y)
         predictions = np.array(
             self.capsule.model_.predict(self.capsule.X_test_ if X is None else X)
@@ -155,22 +149,7 @@ class RegressionPlots:
         standard: bool = False,
         **hist_args,
     ) -> plt.Axes:
-        """Plot a histogram of standardized residuals.
-
-        Computes standardized residuals from true and predicted values and displays
-        a histogram. If no data is provided, uses the capsule's stored test set.
-
-        Args:
-            X: Input data for prediction (optional). If None, uses the test input data.
-            y: True target values (optional). If None, uses the test target data.
-            bins: Number of bins or binning strategy for matplotlib's hist. If None,
-                defaults to 30.
-            standard: If True, uses the standard standardized residuals.
-            **hist_args: Additional keyword arguments passed to matplotlib's hist.
-
-        Returns:
-            The matplotlib Axes object containing the histogram.
-        """
+        """Histogram of (optionally standardized) residuals."""
         y_true = np.array(self.capsule.y_test_ if y is None else y)
         predictions = np.array(
             self.capsule.model_.predict(self.capsule.X_test_ if X is None else X)

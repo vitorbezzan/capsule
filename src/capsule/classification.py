@@ -14,14 +14,10 @@ from capsule.classification_plots import ClassificationPlots
 
 
 class ClassificationCapsule(BaseCapsule, ClassifierMixin):
-    """Capsule implementation for classification tasks.
+    """Capsule for classification tasks.
 
-    This class wraps classification models and provides performance estimation
-    using Confidence-based Performance Estimation (CBPE) from the nannyml
-    library. It supports both binary and multiclass classification scenarios.
-
-    Attributes:
-        model_: The wrapped classification model implementing ImplementsProba.
+    Wraps a classification model and provides CBPE-based performance monitoring,
+    univariate drift detection, and plotting utilities.
     """
 
     model_: ImplementsProba
@@ -30,22 +26,17 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
     def __init__(
         self, model: ImplementsProba, X_test: Input, y_test: Output, **chunk_args
     ) -> None:
-        """Initialize the classification capsule with CBPE estimator.
-
-        Sets up the classification capsule with a Confidence-based Performance
-        Estimation (CBPE) estimator for performance monitoring. The CBPE
-        estimator is fitted on the provided test data to serve as reference.
+        """Build a classification capsule with CBPE reference data.
 
         Args:
-            model: A trained classification model implementing predict and
-                predict_proba methods.
-            X_test: Test input data for reference.
-            y_test: Test target data for reference.
-            **chunk_args: Additional keyword arguments passed to CBPE estimator,
-                to be filtered to exclude reserved parameter names.
+            model: Trained classifier implementing ``predict`` and ``predict_proba``.
+            X_test: Reference feature data used to fit monitoring components.
+            y_test: Reference targets aligned with ``X_test``.
+            **chunk_args: Chunking kwargs forwarded to CBPE and drift calculators
+                (e.g., ``chunk_size``, ``chunk_period``).
 
         Raises:
-            ValueError: If multi-target classification is attempted (not supported).
+            ValueError: When multiple target columns are provided.
         """
         super().__init__(
             model,
@@ -95,40 +86,19 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def predict_proba(self, X: Input) -> Output:
-        """Generate class probability predictions using the wrapped model.
-
-        Args:
-            X: Input data for probability prediction.
-
-        Returns:
-            Predicted class probabilities from the wrapped model.
-        """
+        """Return class probabilities from the wrapped model."""
         return self.model_.predict_proba(X)
 
     @validate_call(config={"arbitrary_types_allowed": True})
     def format_data(self, X: Input, y: tp.Optional[Output] = None) -> pd.DataFrame:
-        """Generate properly formatted DataFrame for CBPE analysis.
+        """Format data for CBPE estimation.
 
-        Creates a DataFrame with the structure required by the CBPE estimator,
-        including feature columns, predictions, predicted probabilities, and
-        optionally target values. Automatically handles datetime indexing.
-
-        Args:
-            X: Input data to format.
-            y: Target data to include (optional). If provided, adds target
-                column to the DataFrame.
-
-        Returns:
-            DataFrame formatted for CBPE with columns:
-                - CBPE_f_0, CBPE_f_1, ...: Feature columns
-                - CBPE_prediction: Model predictions
-                - CBPE_target: Target values (if y provided)
-                - CBPE_proba: Prediction probabilities (binary classification)
-                - CBPE_class_0, CBPE_class_1, ...: Class probabilities (multiclass)
-                - CBPE_timestamp: Timestamp column (if datetime index)
+        Returns a DataFrame with features, predictions, predicted probabilities,
+        optional targets, and optional timestamps when the input index is a
+        ``DatetimeIndex``.
 
         Raises:
-            ValueError: If input data doesn"t have expected number of features.
+            ValueError: If the input feature count differs from the reference.
         """
         if X.shape[1] != self.n_features_:
             raise ValueError(
@@ -167,22 +137,17 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
         X: Input,
         metric: str = "f1",
     ) -> pd.DataFrame:
-        """Estimate classification performance metrics using CBPE.
-
-        Uses the fitted CBPE estimator to estimate performance metrics
-        (F1, ROC-AUC, precision, recall) on the provided analysis data
-        without requiring true target values.
+        """Estimate classification performance via CBPE.
 
         Args:
-            X: Analysis input data for performance estimation.
-            metric: Metric to use. In classification, this can be "f1", "roc_auc",
-                "precision", or "recall". Default is "f1".
+            X: Analysis features.
+            metric: One of ``f1``, ``roc_auc``, ``precision``, ``recall``.
 
         Returns:
-            DataFrame containing estimated performance metrics over time.
+            DataFrame of estimated performance over analysis chunks.
 
         Raises:
-            ValueError: If timestamp column is required but missing from data.
+            ValueError: If a timestamp column is required but missing.
         """
         df = (
             self._get_metrics_result(X)
@@ -198,18 +163,11 @@ class ClassificationCapsule(BaseCapsule, ClassifierMixin):
 
     @property
     def plots(self) -> ClassificationPlots:
-        """Access regression-specific plotting methods.
-
-        Provides access to plotting utilities tailored for regression analysis,
-        such as scatter plots comparing true vs. predicted values.
-
-        Returns:
-            An instance of RegressionPlots for generating regression plots.
-        """
+        """Classification plotting helpers (ROC, PR curves)."""
         return ClassificationPlots(self)
 
     def _get_metrics_result(self, X: Input) -> Result:
-        """Internal function to return the full set of metrics."""
+        """Return the raw CBPE result object for downstream use."""
         analysis_data = self.format_data(X, None)
 
         if (self.estimator_.timestamp_column_name is not None) and (
